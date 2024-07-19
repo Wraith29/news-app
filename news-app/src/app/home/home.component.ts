@@ -23,8 +23,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this._subscriptions.push(
       this._articleService.getAllArticles().subscribe({
         next: (articles: Article[]) => {
-          console.log("Received Articles:", articles);
-
           this._articles = articles ?? [];
           this._filterArticles(this._query);
         },

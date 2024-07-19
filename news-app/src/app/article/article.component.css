@@ -1,0 +1,7 @@
+.article {
+  padding: 10px;
+
+  &:hover {
+    background-color: white;
+  }
+}

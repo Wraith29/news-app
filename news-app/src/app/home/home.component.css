@@ -1,3 +1,7 @@
+.home {
+  height: 100%;
+}
+
 .input-row {
   >form>input {
     padding: 10px;
@@ -6,8 +10,12 @@
 
 .data-row {
   margin-top: 10px;
+  height: 94%;
+  border: 1px solid black;
+  border-radius: 10px;
 
   >ul {
-    overflow: hidden;
+    overflow: scroll;
+    height: 100%;
   }
 }
