@@ -1,0 +1,13 @@
+.input-row {
+  >form>input {
+    padding: 10px;
+  }
+}
+
+.data-row {
+  margin-top: 10px;
+
+  >ul {
+    overflow: hidden;
+  }
+}

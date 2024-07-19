@@ -1,0 +1,13 @@
+<div class="input-row">
+  <form>
+    <input name="query" type="text" placeholder="Search" (keyup)="handleInput($event)" />
+  </form>
+</div>
+
+<div class="data-row">
+  <ul>
+    @for (article of visibleArticles; track article) {
+    <app-article [article]="article"></app-article>
+    }
+  </ul>
+</div>

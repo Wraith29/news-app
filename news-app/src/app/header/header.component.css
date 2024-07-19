@@ -1,0 +1,8 @@
+.header-row {
+  margin-bottom: 10px;
+  display: flex;
+
+  .title {
+    margin-right: 10px;
+  }
+}

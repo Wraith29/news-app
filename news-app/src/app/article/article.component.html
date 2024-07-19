@@ -1,0 +1,13 @@
+<li class="article" (click)="toggleCollapsed()">
+  @if (collapsed) {
+  <h3>{{article.title}}</h3>
+  <sub>[{{article.publishedParsed | date: 'yyyy-MM-dd hh:mm:ss'}}] {{article.author}}</sub>
+  } @else {
+  <h3>{{article.title}}</h3>
+  <p>{{article.description}}</p>
+  <sub>
+    [<a href="{{article.link}}" target="_blank">Link</a>]
+    <p>[{{article.publishedParsed | date: 'yyyy-MM-dd hh:mm:ss'}}]</p>
+  </sub>
+  }
+</li>
