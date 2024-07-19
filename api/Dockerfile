@@ -7,7 +7,6 @@ COPY go.mod go.sum .
 RUN go mod download
 
 COPY *.go .
-COPY feeds.txt .
 
 RUN go build -o main main.go
 

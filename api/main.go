@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"os"
-	"rss-app/cmd/api"
+
 	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/wraith29/news-app/api/cmd/api"
 )
 
 const defaultPort = 2912

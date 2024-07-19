@@ -1,10 +1,10 @@
 package data
 
 import (
-	"rss-app/cmd/models"
 	"sort"
 
 	"github.com/mmcdole/gofeed"
+	"github.com/wraith29/news-app/api/cmd/models"
 )
 
 func GetAllArticles() (models.ArticleList, error) {

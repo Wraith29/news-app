@@ -2,7 +2,8 @@ package data
 
 import (
 	"fmt"
-	"rss-app/cmd/models"
+
+	"github.com/wraith29/news-app/api/cmd/models"
 )
 
 func GetAllFeeds() ([]models.Feed, error) {

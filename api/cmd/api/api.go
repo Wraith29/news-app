@@ -2,10 +2,10 @@ package api
 
 import (
 	"net/http"
-	"rss-app/cmd/data"
-	"rss-app/cmd/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/wraith29/news-app/api/cmd/data"
+	"github.com/wraith29/news-app/api/cmd/models"
 )
 
 type cacheableRequest[T any] struct {

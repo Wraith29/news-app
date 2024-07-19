@@ -1,4 +1,4 @@
-module rss-app
+module github.com/wraith29/news-app/api
 
 go 1.22.3
 
