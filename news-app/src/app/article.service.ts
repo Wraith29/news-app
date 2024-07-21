@@ -10,8 +10,9 @@ import { CacheService } from './cache.service';
 export class ArticleService {
   private _baseUrl: string;
   private _articleStorageKey: string = "articles";
+  private _authorStorageKey: string = "authors";
 
-  constructor(private _cache:CacheService) {
+  constructor(private _cache: CacheService) {
     this._baseUrl = environment.apiBaseUrl;
   }
 
@@ -19,30 +20,12 @@ export class ArticleService {
     const url = this._buildUrl("articles");
 
     return this._cache.get<Article[]>(url, this._articleStorageKey);
+  }
 
-    // Nothing found in session storage, make request, write to session, pass values
-    // const existingResponse = sessionStorage.getItem(this._sessionStorageKey);
+  public getAllAuthors(): Observable<string[]> {
+    const url = this._buildUrl("authors");
 
-    // if (existingResponse === null) {
-    //   return this._http.get<ArticleResponse>(url).pipe(map((res: ArticleResponse) => {
-    //     this._writeToCache(res);
-    //     return res.articles ?? [];
-    //   }));
-    // }
-
-    // const articleData: ArticleResponse = JSON.parse(existingResponse);
-
-    // return new Observable((sub: Subscriber<Article[]>) => {
-    //   sub.next(articleData.articles ?? []);
-
-    //   this._http.get<ArticleResponse>(url).pipe(map((res: ArticleResponse) => {
-    //     if (res.hash !== articleData.hash) {
-    //       this._writeToCache(res);
-
-    //       sub.next(res.articles ?? []);
-    //     }
-    //   })).subscribe();
-    // });
+    return this._cache.get<string[]>(url, this._authorStorageKey);
   }
 
   private _buildUrl(endpoint: string): string {

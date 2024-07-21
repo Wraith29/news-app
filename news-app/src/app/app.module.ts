@@ -11,26 +11,30 @@ import { provideRouter, RouterOutlet, withComponentInputBinding } from "@angular
 import { provideHttpClient } from "@angular/common/http";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HeaderComponent } from './header/header.component';
+import { MultiSelectModule } from "primeng/multiselect";
+import { InputTextModule } from "primeng/inputtext";
 
 @NgModule({
   declarations: [
+    AdminComponent,
     AppComponent,
     ArticleComponent,
-    AdminComponent,
-    HomeComponent,
     HeaderComponent,
+    HomeComponent,
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
+    BrowserModule,
     FormsModule,
+    InputTextModule,
+    MultiSelectModule,
     RouterOutlet,
   ],
   providers: [
-    provideHttpClient(),
-    ArticleService,
     provideAnimationsAsync(),
-    provideRouter(routes, withComponentInputBinding())
+    provideHttpClient(),
+    provideRouter(routes, withComponentInputBinding()),
+    ArticleService,
   ],
   bootstrap: [AppComponent]
 })

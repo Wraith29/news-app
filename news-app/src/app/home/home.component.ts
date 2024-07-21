@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Article } from "../types/article";
 import { Subscription } from "rxjs";
 import { ArticleService } from "../article.service";
+import { MultiSelectChangeEvent } from "primeng/multiselect";
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,9 @@ import { ArticleService } from "../article.service";
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public visibleArticles: Article[] = [];
+
+  public authors: string[] = [];
+  public selectedAuthors: string[] = [];
 
   private _articles: Article[] = [];
   private _subscriptions: Subscription[] = [];
@@ -31,6 +35,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this._subscriptions.push(
+      this._articleService.getAllAuthors().subscribe({
+        next: (authors: string[]) => {
+          this.authors = authors;
+        }
+      })
+    )
   }
 
   public ngOnDestroy(): void {
@@ -43,8 +55,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     this._filterArticles(query);
   }
 
+  public onChange(event: MultiSelectChangeEvent): void {
+    this.selectedAuthors = <string[]>event.value;
+
+    this._filterArticles(this._query);
+  }
+
   private _filterArticles(query: string): void {
-    this.visibleArticles = this._articles.filter((article: Article) => this._objectContains(article, query.toLowerCase()));
+    this.visibleArticles = this._articles.filter((article: Article) => {
+      const queryFilter = this._objectContains(article, query.toLowerCase());
+      let authorFilter = true;
+
+      if (this.selectedAuthors && this.selectedAuthors.length > 0) {
+        authorFilter = this.selectedAuthors.includes(article.author);
+      }
+
+      return queryFilter && authorFilter;
+    });
   }
 
   private _objectContains(item: object, searchValue: string): boolean {

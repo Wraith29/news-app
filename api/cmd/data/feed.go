@@ -1,7 +1,7 @@
 package data
 
 import (
-	"fmt"
+	"sort"
 
 	"github.com/wraith29/news-app/api/cmd/models"
 )
@@ -10,7 +10,6 @@ func GetAllFeeds() ([]models.Feed, error) {
 	db, err := getConn()
 
 	if err != nil {
-		fmt.Printf("Failed to get conn: %s\n", err.Error())
 		return nil, err
 	}
 
@@ -19,7 +18,6 @@ func GetAllFeeds() ([]models.Feed, error) {
 	rows, err := db.Query("SELECT id, author, feed_url FROM news_feed")
 
 	if err != nil {
-		fmt.Printf("Failed to query DB: %s\n", err.Error())
 		return nil, err
 	}
 
@@ -31,7 +29,6 @@ func GetAllFeeds() ([]models.Feed, error) {
 		err = rows.Scan(&newsFeedId, &newsFeedAuthor, &newsFeedUrl)
 
 		if err != nil {
-			fmt.Printf("Failed to Scan row: %s\n", err.Error())
 			return nil, err
 		}
 
@@ -39,9 +36,44 @@ func GetAllFeeds() ([]models.Feed, error) {
 	}
 
 	if err = rows.Err(); err != nil {
-		fmt.Printf("Error scanning rows: %s\n", err.Error())
 		return nil, err
 	}
 
 	return feeds, nil
+}
+
+func GetAllAuthors() ([]string, error) {
+	db, err := getConn()
+
+	if err != nil {
+		return nil, err
+	}
+
+	authors := make([]string, 0)
+
+	rows, err := db.Query("SELECT author FROM news_feed")
+
+	if err != nil {
+		return nil, err
+	}
+
+	var author string
+
+	for rows.Next() {
+		err = rows.Scan(&author)
+
+		if err != nil {
+			return nil, err
+		}
+
+		authors = append(authors, author)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	sort.Strings(authors)
+
+	return authors, nil
 }
