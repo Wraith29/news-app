@@ -2,10 +2,10 @@
 
   <div class="input-row">
     <form>
-      <input pInputText name="query" type="text" placeholder="Search" (keyup)="handleInput($event)" />
+      <input pInputText name="query" type="text" placeholder="Search..." (keyup)="handleInput($event)" />
 
       <p-multiSelect [options]="authors" [(ngModel)]="selectedAuthors" name="authors" styleClass="author-select"
-        (onChange)="onChange($event)" />
+        (onChange)="onChange($event)" placeholder="Authors..." />
     </form>
   </div>
 
