@@ -9,9 +9,20 @@
 
 :host {
 
-  ::ng-deep .p-multiselect,
-  input {
-    width: 20%;
+  @media (width <=1280px) {
+
+    ::ng-deep .p-multiselect,
+    input {
+      width: 50%;
+    }
+  }
+
+  @media (width >=1280px) {
+
+    ::ng-deep .p-multiselect,
+    input {
+      width: 20%;
+    }
   }
 }
 
