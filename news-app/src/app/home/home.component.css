@@ -8,9 +8,7 @@
 }
 
 :host {
-
   @media (width <=1280px) {
-
     ::ng-deep .p-multiselect,
     input {
       width: 50%;
@@ -18,7 +16,6 @@
   }
 
   @media (width >=1280px) {
-
     ::ng-deep .p-multiselect,
     input {
       width: 20%;
@@ -33,7 +30,7 @@
   border-radius: 10px;
   padding: 0;
 
-  >ul {
+  > ul {
     margin: 0;
     padding: 0;
     list-style-type: none;

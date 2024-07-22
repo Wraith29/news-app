@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Article } from "../types/article";
-import { Subscription } from "rxjs";
-import { MultiSelectChangeEvent } from "primeng/multiselect";
-import { ArticleService } from "../services/article.service";
-import { AuthorService } from "../services/author.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Article } from '../types/article';
+import { Subscription } from 'rxjs';
+import { MultiSelectChangeEvent } from 'primeng/multiselect';
+import { ArticleService } from '../services/article.service';
+import { AuthorService } from '../services/author.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public visibleArticles: Article[] = [];
@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private _articleService: ArticleService,
     private _authorService: AuthorService,
-  ) { }
+  ) {}
 
   public ngOnInit(): void {
     this._subscriptions.push(
@@ -34,17 +34,17 @@ export class HomeComponent implements OnInit, OnDestroy {
         },
         error: (err: Error) => {
           console.error(err);
-        }
-      })
+        },
+      }),
     );
 
     this._subscriptions.push(
       this._authorService.getAll().subscribe({
         next: (authors: string[]) => {
           this.authors = authors;
-        }
-      })
-    )
+        },
+      }),
+    );
   }
 
   public ngOnDestroy(): void {

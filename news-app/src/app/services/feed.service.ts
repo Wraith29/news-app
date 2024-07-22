@@ -5,18 +5,18 @@ import { Observable } from 'rxjs';
 import { Feed } from '../types/feed';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FeedService {
   private _baseUrl: string;
-  private _storageKey: string = "news-feed:feeds";
+  private _storageKey: string = 'news-feed:feeds';
 
   constructor(private _cache: CacheService) {
     this._baseUrl = environment.apiBaseUrl;
   }
 
   public getAll(): Observable<Feed[]> {
-    const url = this._baseUrl + "feeds";
+    const url = this._baseUrl + 'feeds';
 
     return this._cache.get<Feed[]>(url, this._storageKey);
   }
