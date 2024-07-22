@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Article } from "../types/article";
 import { Subscription } from "rxjs";
-import { ArticleService } from "../article.service";
 import { MultiSelectChangeEvent } from "primeng/multiselect";
+import { ArticleService } from "../services/article.service";
+import { AuthorService } from "../services/author.service";
 
 @Component({
   selector: 'app-home',
@@ -21,11 +22,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private _articleService: ArticleService,
+    private _authorService: AuthorService,
   ) { }
 
   public ngOnInit(): void {
     this._subscriptions.push(
-      this._articleService.getAllArticles().subscribe({
+      this._articleService.getAll().subscribe({
         next: (articles: Article[]) => {
           this._articles = articles ?? [];
           this._filterArticles(this._query);
@@ -37,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this._subscriptions.push(
-      this._articleService.getAllAuthors().subscribe({
+      this._authorService.getAll().subscribe({
         next: (authors: string[]) => {
           this.authors = authors;
         }

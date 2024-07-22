@@ -1,4 +1,7 @@
 main {
+  position: absolute;
+  top: 0;
+  left: 0;
   background-color: #f0f0f0;
   margin: 20px;
   padding: 20px;
