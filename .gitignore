@@ -3,3 +3,5 @@ main
 
 dist/
 node_modules/
+
+config.toml

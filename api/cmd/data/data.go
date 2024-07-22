@@ -5,16 +5,17 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
+	"github.com/wraith29/news-app/api/cmd/config"
 )
 
 var _db *sql.DB
 
-func getConn() (*sql.DB, error) {
+func getConn(cfg *config.Config) (*sql.DB, error) {
 	if _db != nil {
 		return _db, nil
 	}
 
-	connStr := "user=postgres password=password dbname=news_feed sslmode=disable"
+	connStr := fmt.Sprintf("user=%s password=%s dbname=news_feed sslmode=disable", cfg.Postgres.Username, cfg.Postgres.Password)
 	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {

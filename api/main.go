@@ -2,36 +2,19 @@ package main
 
 import (
 	"fmt"
-	"os"
-
-	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/wraith29/news-app/api/cmd/api"
+	"github.com/wraith29/news-app/api/cmd/config"
 )
 
-const defaultPort = 2912
-
-func getPort() int {
-	envPort := os.Getenv("RSS_APP_PORT")
-
-	if len(envPort) == 0 {
-		return defaultPort
-	}
-
-	port, err := strconv.Atoi(envPort)
+func main() {
+	err := config.LoadConfig()
 
 	if err != nil {
-		return defaultPort
+		panic(err)
 	}
-
-	return port
-}
-
-func main() {
-	port := getPort()
-
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -40,5 +23,5 @@ func main() {
 
 	api.AddApiRoutes(r)
 
-	r.Run(fmt.Sprintf("0.0.0.0:%d", port))
+	r.Run(fmt.Sprintf("0.0.0.0:%d", config.Cfg.Port))
 }

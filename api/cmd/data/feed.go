@@ -3,11 +3,12 @@ package data
 import (
 	"sort"
 
+	"github.com/wraith29/news-app/api/cmd/config"
 	"github.com/wraith29/news-app/api/cmd/models"
 )
 
-func GetAllFeeds() ([]models.Feed, error) {
-	db, err := getConn()
+func GetAllFeeds(cfg *config.Config) ([]models.Feed, error) {
+	db, err := getConn(cfg)
 
 	if err != nil {
 		return nil, err
@@ -42,8 +43,8 @@ func GetAllFeeds() ([]models.Feed, error) {
 	return feeds, nil
 }
 
-func GetAllAuthors() ([]string, error) {
-	db, err := getConn()
+func GetAllAuthors(cfg *config.Config) ([]string, error) {
+	db, err := getConn(cfg)
 
 	if err != nil {
 		return nil, err

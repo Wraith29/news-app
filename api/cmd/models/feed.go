@@ -1,8 +1,9 @@
 package models
 
 type Feed struct {
-	id              int
-	Author, FeedUrl string
+	Id      int    `json:"id"`
+	Author  string `json:"author"`
+	FeedUrl string `json:"feedUrl"`
 }
 
 func NewFeed(id int, author, feedUrl string) Feed {

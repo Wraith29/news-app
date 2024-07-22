@@ -4,11 +4,12 @@ import (
 	"sort"
 
 	"github.com/mmcdole/gofeed"
+	"github.com/wraith29/news-app/api/cmd/config"
 	"github.com/wraith29/news-app/api/cmd/models"
 )
 
 func GetAllArticles() (models.ArticleList, error) {
-	feeds, err := GetAllFeeds()
+	feeds, err := GetAllFeeds(config.Cfg)
 
 	if err != nil {
 		return nil, err
