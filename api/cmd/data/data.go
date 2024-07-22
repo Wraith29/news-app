@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/Wraith29/news-app/api/cmd/config"
 	_ "github.com/lib/pq"
-	"github.com/wraith29/news-app/api/cmd/config"
 )
 
 var _db *sql.DB

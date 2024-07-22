@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
+	"github.com/Wraith29/news-app/api/cmd/api"
+	"github.com/Wraith29/news-app/api/cmd/config"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/wraith29/news-app/api/cmd/api"
-	"github.com/wraith29/news-app/api/cmd/config"
 )
 
 func main() {

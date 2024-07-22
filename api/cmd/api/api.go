@@ -4,10 +4,10 @@ import (
 	"crypto/sha256"
 	"net/http"
 
+	"github.com/Wraith29/news-app/api/cmd/config"
+	"github.com/Wraith29/news-app/api/cmd/data"
+	"github.com/Wraith29/news-app/api/cmd/models"
 	"github.com/gin-gonic/gin"
-	"github.com/wraith29/news-app/api/cmd/config"
-	"github.com/wraith29/news-app/api/cmd/data"
-	"github.com/wraith29/news-app/api/cmd/models"
 )
 
 type cacheableRequest[T any] struct {

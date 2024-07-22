@@ -7,6 +7,7 @@ COPY go.mod go.sum .
 RUN go mod download
 
 COPY *.go .
+COPY config.toml .
 
 RUN go build -o main main.go
 
