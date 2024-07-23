@@ -2,12 +2,9 @@ FROM golang:latest
 
 WORKDIR /usr/src/app
 
-COPY go.mod go.sum .
+COPY . .
 
 RUN go mod download
-
-COPY *.go .
-COPY config.toml .
 
 RUN go build -o main main.go
 

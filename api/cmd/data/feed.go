@@ -3,8 +3,8 @@ package data
 import (
 	"sort"
 
-	"github.com/wraith29/news-app/api/cmd/config"
-	"github.com/wraith29/news-app/api/cmd/models"
+	"github.com/Wraith29/news-app/api/cmd/config"
+	"github.com/Wraith29/news-app/api/cmd/models"
 )
 
 func GetAllFeeds(cfg *config.Config) ([]models.Feed, error) {

@@ -15,7 +15,7 @@ func getConn(cfg *config.Config) (*sql.DB, error) {
 		return _db, nil
 	}
 
-	connStr := fmt.Sprintf("user=%s password=%s dbname=news_feed sslmode=disable", cfg.Postgres.Username, cfg.Postgres.Password)
+	connStr := fmt.Sprintf("user=%s password=%s dbname=news_feed sslmode=disable host=host.docker.internal", cfg.Postgres.Username, cfg.Postgres.Password)
 	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
