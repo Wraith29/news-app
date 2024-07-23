@@ -7,7 +7,9 @@ import (
 )
 
 type postgres struct {
-	Username, Password string
+	Username string
+	Password string
+	Host     string
 }
 
 type Config struct {

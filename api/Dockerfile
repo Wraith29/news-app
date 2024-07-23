@@ -3,6 +3,8 @@ FROM golang:latest
 WORKDIR /usr/src/app
 
 COPY . .
+RUN rm config.toml
+RUN mv config.prod.toml config.toml
 
 RUN go mod download
 
