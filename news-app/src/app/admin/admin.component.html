@@ -1,22 +1,52 @@
-<p-table [value]="feeds">
+<p-confirmDialog />
+
+<p-table [value]="feeds" dataKey="id" editMode="row">
   <ng-template pTemplate="header">
     <tr>
-      <th>Id</th>
-      <th>Author</th>
-      <th>Feed Url</th>
+      <th class="id-column">Id</th>
+      <th class="author-column">Author</th>
+      <th class="feedurl-column">Feed Url</th>
+      <th class="buttons-column">Edit / Delete</th>
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-feed>
-    <tr>
-      <td>
+  <ng-template pTemplate="body" let-feed let-editing="editing" let-idx="rowIndex">
+    <tr class="data-row" [pEditableRow]="feed">
+      <td class="id-column">
         {{ feed.id }}
       </td>
-      <td>
-        {{ feed.author }}
+
+      <td class="author-column" [pEditableColumn]="feed.author" pEditableColumnField="author">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="feed.author" required />
+          </ng-template>
+          <ng-template pTemplate="output">
+            <p> {{ feed.author }}</p>
+          </ng-template>
+        </p-cellEditor>
       </td>
-      <td>
-        {{ feed.feedUrl }}
+
+      <td class="feedurl-column" [pEditableColumn]="feed.feedUrl" pEditableColumnField="feedUrl">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="feed.feedUrl" required />
+          </ng-template>
+          <ng-template pTemplate="output">
+            <p> {{ feed.feedUrl }}</p>
+          </ng-template>
+        </p-cellEditor>
+      </td>
+
+      <td class="buttons-column">
+        <span *ngIf="!editing">
+          <p-button pInitEditableRow icon="fa fa-pencil" severity="success" (click)="onFeedEditInit(feed)" />
+          <p-button icon="fa fa-trash" severity="danger" (click)="deleteFeed(feed)" />
+        </span>
+        <span *ngIf="editing">
+          <p-button pSaveEditableRow icon="fa fa-check" severity="success" (click)="onFeedEditSave(feed)" />
+          <p-button pCancelEditableRow icon="fa fa-xmark" severity="danger" (click)="onFeedEditCancel(feed, idx)" />
+        </span>
       </td>
     </tr>
   </ng-template>

@@ -21,6 +21,9 @@ import { ArticleService } from './services/article.service';
 import { AuthorService } from './services/author.service';
 import { FeedService } from './services/feed.service';
 import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,8 @@ import { TableModule } from 'primeng/table';
   imports: [
     AppRoutingModule,
     BrowserModule,
+    ButtonModule,
+    ConfirmDialogModule,
     FormsModule,
     InputTextModule,
     MultiSelectModule,
@@ -47,6 +52,7 @@ import { TableModule } from 'primeng/table';
     AuthorService,
     CacheService,
     FeedService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent],
 })

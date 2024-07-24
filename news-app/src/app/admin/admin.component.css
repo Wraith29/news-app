@@ -1,0 +1,28 @@
+.data-row {
+  height: 80px;
+  margin: 0;
+}
+
+.id-column,
+.buttons-column {
+  width: 10%;
+}
+
+.author-column {
+  width: 30%;
+}
+
+.feedurl-column {
+  width: 50%;
+}
+
+input {
+  width: 100%;
+}
+
+
+
+p-button {
+  margin: 0 5px;
+  padding: 0;
+}
