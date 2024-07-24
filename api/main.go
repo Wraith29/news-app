@@ -15,11 +15,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	r := gin.Default()
 
-	r.Use(cors.New(cors.Config{
-		AllowAllOrigins: true,
-	}))
+	corsCfg := cors.DefaultConfig()
+	corsCfg.AllowAllOrigins = true
+
+	r.Use(cors.New(corsCfg))
 
 	api.AddApiRoutes(r)
 

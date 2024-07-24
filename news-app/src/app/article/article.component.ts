@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
-import { Article } from '../types/article';
+import { Component, Input } from "@angular/core";
+import { Article } from "../types/article";
 
 @Component({
-  selector: 'app-article',
-  templateUrl: './article.component.html',
-  styleUrl: './article.component.css',
+  selector: "app-article",
+  templateUrl: "./article.component.html",
+  styleUrl: "./article.component.css",
 })
 export class ArticleComponent {
   @Input({ required: true })

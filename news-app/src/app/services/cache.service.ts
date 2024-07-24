@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { map, Observable, Subscriber } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { map, Observable, Subscriber } from "rxjs";
 
 interface CacheableRequest<T> {
   value: T;
@@ -8,7 +8,7 @@ interface CacheableRequest<T> {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class CacheService {
   constructor(private _http: HttpClient) {}
@@ -16,7 +16,7 @@ export class CacheService {
   public get<T>(url: string, key: string): Observable<T> {
     const existingData = sessionStorage.getItem(key);
 
-    if (existingData === null || existingData === '' || existingData === '{}') {
+    if (existingData === null || existingData === "" || existingData === "{}") {
       return this._http.get<CacheableRequest<T>>(url).pipe(
         map((res: CacheableRequest<T>) => {
           this._writeToCache(key, res);

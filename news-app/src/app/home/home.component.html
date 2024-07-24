@@ -6,8 +6,7 @@
         name="query"
         type="text"
         placeholder="Search..."
-        (keyup)="handleInput($event)"
-      />
+        (keyup)="handleInput($event)" />
 
       <p-multiSelect
         [options]="authors"
@@ -15,8 +14,7 @@
         name="authors"
         styleClass="author-select"
         (onChange)="onChange($event)"
-        placeholder="Authors..."
-      />
+        placeholder="Authors..." />
     </form>
   </div>
 

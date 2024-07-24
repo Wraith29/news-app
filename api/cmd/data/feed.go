@@ -1,8 +1,6 @@
 package data
 
 import (
-	"sort"
-
 	"github.com/Wraith29/news-app/api/cmd/config"
 	"github.com/Wraith29/news-app/api/cmd/models"
 )
@@ -43,38 +41,26 @@ func GetAllFeeds(cfg *config.Config) ([]models.Feed, error) {
 	return feeds, nil
 }
 
-func GetAllAuthors(cfg *config.Config) ([]string, error) {
+func UpdateFeed(cfg *config.Config, feed models.Feed) error {
 	db, err := getConn(cfg)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	authors := make([]string, 0)
+	_, err = db.Exec("UPDATE news_feed SET author = $1, feed_url = $2 WHERE id = $3", feed.Author, feed.FeedUrl, feed.Id)
 
-	rows, err := db.Query("SELECT author FROM news_feed")
+	return err
+}
+
+func DeleteFeed(cfg *config.Config, id int) error {
+	db, err := getConn(cfg)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var author string
+	_, err = db.Exec("DELETE FROM news_feed WHERE id = $1", id)
 
-	for rows.Next() {
-		err = rows.Scan(&author)
-
-		if err != nil {
-			return nil, err
-		}
-
-		authors = append(authors, author)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	sort.Strings(authors)
-
-	return authors, nil
+	return err
 }

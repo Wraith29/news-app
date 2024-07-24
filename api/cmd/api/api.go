@@ -17,29 +17,11 @@ type cacheableRequest[T any] struct {
 
 func AddApiRoutes(e *gin.Engine) {
 	e.GET("/feeds", getAllFeeds)
+	e.PUT("/feed", updateFeed)
+	e.DELETE("/feed", deleteFeed)
+
 	e.GET("/articles", getAllArticles)
 	e.GET("/authors", getAllAuthors)
-}
-
-func getAllFeeds(c *gin.Context) {
-	feeds, err := data.GetAllFeeds(config.Cfg)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	feedAuthors := make([]string, 0)
-	for _, feed := range feeds {
-		feedAuthors = append(feedAuthors, feed.Author)
-	}
-
-	request := cacheableRequest[[]models.Feed]{
-		Value: feeds,
-		Hash:  hashStrings(feedAuthors),
-	}
-
-	c.JSON(http.StatusOK, request)
 }
 
 func getAllArticles(c *gin.Context) {

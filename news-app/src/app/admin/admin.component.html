@@ -10,42 +10,65 @@
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-feed let-editing="editing" let-idx="rowIndex">
+  <ng-template
+    pTemplate="body"
+    let-feed
+    let-editing="editing"
+    let-idx="rowIndex">
     <tr class="data-row" [pEditableRow]="feed">
-      <td class="id-column">
-        {{ feed.id }}
-      </td>
+      <td class="id-column">{{ feed.id }}</td>
 
-      <td class="author-column" [pEditableColumn]="feed.author" pEditableColumnField="author">
+      <td
+        class="author-column"
+        [pEditableColumn]="feed.author"
+        pEditableColumnField="author">
         <p-cellEditor>
           <ng-template pTemplate="input">
             <input pInputText type="text" [(ngModel)]="feed.author" required />
           </ng-template>
           <ng-template pTemplate="output">
-            <p> {{ feed.author }}</p>
+            <p>{{ feed.author }}</p>
           </ng-template>
         </p-cellEditor>
       </td>
 
-      <td class="feedurl-column" [pEditableColumn]="feed.feedUrl" pEditableColumnField="feedUrl">
+      <td
+        class="feedurl-column"
+        [pEditableColumn]="feed.feedUrl"
+        pEditableColumnField="feedUrl">
         <p-cellEditor>
           <ng-template pTemplate="input">
             <input pInputText type="text" [(ngModel)]="feed.feedUrl" required />
           </ng-template>
           <ng-template pTemplate="output">
-            <p> {{ feed.feedUrl }}</p>
+            <p>{{ feed.feedUrl }}</p>
           </ng-template>
         </p-cellEditor>
       </td>
 
       <td class="buttons-column">
         <span *ngIf="!editing">
-          <p-button pInitEditableRow icon="fa fa-pencil" severity="success" (click)="onFeedEditInit(feed)" />
-          <p-button icon="fa fa-trash" severity="danger" (click)="deleteFeed(feed)" />
+          <p-button
+            pInitEditableRow
+            icon="fa fa-pencil"
+            severity="success"
+            (click)="onFeedEditInit(feed)" />
+          <p-button
+            icon="fa fa-trash"
+            severity="danger"
+            (click)="deleteFeed(feed, idx)" />
         </span>
         <span *ngIf="editing">
-          <p-button pSaveEditableRow icon="fa fa-check" severity="success" (click)="onFeedEditSave(feed)" />
-          <p-button pCancelEditableRow icon="fa fa-xmark" severity="danger" (click)="onFeedEditCancel(feed, idx)" />
+          <p-button
+            pSaveEditableRow
+            icon="fa fa-check"
+            severity="success"
+            (click)="onFeedEditSave(feed)" />
+          <p-button
+            pCancelEditableRow
+            icon="fa fa-xmark"
+            severity="danger"
+            (click)="onFeedEditCancel(feed, idx)" />
         </span>
       </td>
     </tr>
