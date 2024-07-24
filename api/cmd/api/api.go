@@ -19,6 +19,7 @@ func AddApiRoutes(e *gin.Engine) {
 	e.GET("/feeds", getAllFeeds)
 	e.PUT("/feed", updateFeed)
 	e.DELETE("/feed", deleteFeed)
+	e.POST("/feed", createFeed)
 
 	e.GET("/articles", getAllArticles)
 	e.GET("/authors", getAllAuthors)

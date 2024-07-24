@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Feed } from "../types/feed";
-import { FeedService } from "../services/feed.service";
 import { Subscription } from "rxjs";
 import { ConfirmationService } from "primeng/api";
+import { FeedService } from "../services/feed.service";
 
 @Component({
   selector: "app-admin",
@@ -11,6 +11,8 @@ import { ConfirmationService } from "primeng/api";
 })
 export class AdminComponent implements OnInit, OnDestroy {
   public feeds: Feed[] = [];
+  public newAuthor: string = "";
+  public newFeedUrl: string = "";
 
   private _subscriptions: Subscription[] = [];
   private _tempFeedStore: { [id: number]: Feed } = {};
@@ -60,5 +62,20 @@ export class AdminComponent implements OnInit, OnDestroy {
   public onFeedEditCancel(feed: Feed, index: number): void {
     this.feeds[index] = this._tempFeedStore[feed.id];
     delete this._tempFeedStore[feed.id];
+  }
+
+  public addNewFeed(): void {
+    this._feedService.create(this.newAuthor, this.newFeedUrl).subscribe({
+      next: (id: number) => {
+        this.feeds.push({
+          id: id,
+          author: this.newAuthor,
+          feedUrl: this.newFeedUrl,
+        });
+
+        this.newAuthor = "";
+        this.newFeedUrl = "";
+      },
+    });
   }
 }

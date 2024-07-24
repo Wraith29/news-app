@@ -64,3 +64,23 @@ func DeleteFeed(cfg *config.Config, id int) error {
 
 	return err
 }
+
+func CreateFeed(cfg *config.Config, author, feedUrl string) (int, error) {
+	db, err := getConn(cfg)
+
+	if err != nil {
+		return -1, err
+	}
+
+	result := db.QueryRow("INSERT INTO news_feed (author, feed_url) VALUES ($1, $2) RETURNING id", author, feedUrl)
+
+	var id int
+
+	err = result.Scan(&id)
+
+	if err != nil {
+		return -1, err
+	}
+
+	return id, nil
+}

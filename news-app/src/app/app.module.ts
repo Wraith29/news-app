@@ -19,11 +19,11 @@ import { InputTextModule } from "primeng/inputtext";
 import { CacheService } from "./services/cache.service";
 import { ArticleService } from "./services/article.service";
 import { AuthorService } from "./services/author.service";
-import { FeedService } from "./services/feed.service";
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
+import { FeedService } from "./services/feed.service";
 
 @NgModule({
   declarations: [
@@ -51,8 +51,8 @@ import { ConfirmationService } from "primeng/api";
     ArticleService,
     AuthorService,
     CacheService,
-    FeedService,
     ConfirmationService,
+    FeedService,
   ],
   bootstrap: [AppComponent],
 })

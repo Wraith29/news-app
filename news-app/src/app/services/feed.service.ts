@@ -44,4 +44,10 @@ export class FeedService {
       },
     });
   }
+
+  public create(author: string, feedUrl: string): Observable<number> {
+    const url = this._baseUrl + "feed";
+
+    return this._http.post<number>(url, { author: author, feedUrl: feedUrl });
+  }
 }

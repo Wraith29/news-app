@@ -76,3 +76,28 @@ func deleteFeed(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, gin.H{})
 }
+
+func createFeed(c *gin.Context) {
+	json := struct {
+		Author  string `json:"author"`
+		FeedUrl string `json:"feedUrl"`
+	}{}
+
+	err := c.ShouldBindJSON(&json)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Should have fields `author` and `feedUrl`"})
+		return
+	}
+
+	fmt.Printf("%+v\n", json)
+
+	newId, err := data.CreateFeed(config.Cfg, json.Author, json.FeedUrl)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, newId)
+}

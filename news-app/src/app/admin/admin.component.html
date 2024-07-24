@@ -14,14 +14,16 @@
     pTemplate="body"
     let-feed
     let-editing="editing"
-    let-idx="rowIndex">
+    let-idx="rowIndex"
+  >
     <tr class="data-row" [pEditableRow]="feed">
       <td class="id-column">{{ feed.id }}</td>
 
       <td
         class="author-column"
         [pEditableColumn]="feed.author"
-        pEditableColumnField="author">
+        pEditableColumnField="author"
+      >
         <p-cellEditor>
           <ng-template pTemplate="input">
             <input pInputText type="text" [(ngModel)]="feed.author" required />
@@ -35,7 +37,8 @@
       <td
         class="feedurl-column"
         [pEditableColumn]="feed.feedUrl"
-        pEditableColumnField="feedUrl">
+        pEditableColumnField="feedUrl"
+      >
         <p-cellEditor>
           <ng-template pTemplate="input">
             <input pInputText type="text" [(ngModel)]="feed.feedUrl" required />
@@ -52,24 +55,47 @@
             pInitEditableRow
             icon="fa fa-pencil"
             severity="success"
-            (click)="onFeedEditInit(feed)" />
+            (click)="onFeedEditInit(feed)"
+          />
           <p-button
             icon="fa fa-trash"
             severity="danger"
-            (click)="deleteFeed(feed, idx)" />
+            (click)="deleteFeed(feed, idx)"
+          />
         </span>
         <span *ngIf="editing">
           <p-button
             pSaveEditableRow
             icon="fa fa-check"
             severity="success"
-            (click)="onFeedEditSave(feed)" />
+            (click)="onFeedEditSave(feed)"
+          />
           <p-button
             pCancelEditableRow
             icon="fa fa-xmark"
             severity="danger"
-            (click)="onFeedEditCancel(feed, idx)" />
+            (click)="onFeedEditCancel(feed, idx)"
+          />
         </span>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <tr>
+      <td class="id-column"></td>
+      <td class="author-column">
+        <input pInputText type="text" [(ngModel)]="newAuthor" required />
+      </td>
+      <td class="feedurl-column">
+        <input pInputText type="text" [(ngModel)]="newFeedUrl" required />
+      </td>
+      <td class="buttons-column">
+        <p-button
+          icon="fa fa-floppy-disk"
+          severity="success"
+          (click)="addNewFeed()"
+        />
       </td>
     </tr>
   </ng-template>
