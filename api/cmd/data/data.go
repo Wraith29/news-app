@@ -16,8 +16,8 @@ func getConn(cfg *config.Config) (*sql.DB, error) {
 	}
 
 	connStr := fmt.Sprintf(
-		"user=%s password=%s dbname=news_feed sslmode=disable host=%s",
-		cfg.Postgres.Username, cfg.Postgres.Password, cfg.Postgres.Host,
+		"user=%s password=%s dbname=news_feed sslmode=disable host=%s port=%d",
+		cfg.Postgres.Username, cfg.Postgres.Password, cfg.Postgres.Host, cfg.Postgres.Port,
 	)
 
 	db, err := sql.Open("postgres", connStr)

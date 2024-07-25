@@ -16,7 +16,7 @@ services:
     networks:
       - news-feed-network
     volumes:
-      - development:/data/postgres
+      - databases_development:/data/postgres
 
   web:
     build:
@@ -33,5 +33,5 @@ services:
       - news-feed-network
 
 volumes:
-  development:
+  databases_development:
     external: true

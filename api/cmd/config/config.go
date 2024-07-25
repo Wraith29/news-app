@@ -10,6 +10,7 @@ type postgres struct {
 	Username string
 	Password string
 	Host     string
+	Port     int
 }
 
 type Config struct {

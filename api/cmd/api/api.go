@@ -6,7 +6,6 @@ import (
 
 	"github.com/Wraith29/news-app/api/cmd/config"
 	"github.com/Wraith29/news-app/api/cmd/data"
-	"github.com/Wraith29/news-app/api/cmd/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,22 +22,6 @@ func AddApiRoutes(e *gin.Engine) {
 
 	e.GET("/articles", getAllArticles)
 	e.GET("/authors", getAllAuthors)
-}
-
-func getAllArticles(c *gin.Context) {
-	articles, err := data.GetAllArticles()
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	request := cacheableRequest[[]models.Article]{
-		Value: articles,
-		Hash:  articles.Hash(),
-	}
-
-	c.JSON(http.StatusOK, request)
 }
 
 func getAllAuthors(c *gin.Context) {
