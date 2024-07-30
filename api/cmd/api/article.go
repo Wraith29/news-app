@@ -23,7 +23,3 @@ func getAllArticles(c *gin.Context) {
 
 	c.JSON(http.StatusOK, request)
 }
-
-func getArticleHash(c *gin.Context) {
-
-}

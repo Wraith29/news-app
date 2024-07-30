@@ -90,8 +90,6 @@ func createFeed(c *gin.Context) {
 		return
 	}
 
-	fmt.Printf("%+v\n", json)
-
 	newId, err := data.CreateFeed(config.Cfg, json.Author, json.FeedUrl)
 
 	if err != nil {
