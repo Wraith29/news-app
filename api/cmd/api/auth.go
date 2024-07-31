@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Wraith29/news-app/api/cmd/data"
 	"github.com/Wraith29/news-app/api/cmd/models"
@@ -36,9 +38,16 @@ func authUser(c *gin.Context) {
 		return
 	}
 
-	token := jwt.New(jwt.SigningMethodHS256)
+	now := time.Now()
 
-	tokenStr, err := token.SignedString("my-secret")
+	claims := jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(now.Add(24 * time.Hour)),
+		IssuedAt:  jwt.NewNumericDate(now),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenStr, err := token.SignedString([]byte("my-secret"))
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
