@@ -14,8 +14,9 @@ type postgres struct {
 }
 
 type Config struct {
-	Port     int
-	Postgres postgres
+	Port      int
+	SecretKey string
+	Postgres  postgres
 }
 
 var Cfg *Config = &Config{}
