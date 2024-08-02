@@ -11,19 +11,26 @@ import {
   RouterOutlet,
   withComponentInputBinding,
 } from "@angular/router";
-import { provideHttpClient, withFetch } from "@angular/common/http";
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from "@angular/common/http";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { HeaderComponent } from "./header/header.component";
 import { MultiSelectModule } from "primeng/multiselect";
 import { InputTextModule } from "primeng/inputtext";
-import { CacheService } from "./services/cache.service";
-import { ArticleService } from "./services/article.service";
-import { AuthorService } from "./services/author.service";
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { ConfirmationService } from "primeng/api";
+import { DialogModule } from "primeng/dialog";
+import { ArticleService } from "./services/article.service";
+import { AuthorService } from "./services/author.service";
+import { AuthService } from "./services/auth.service";
+import { CacheService } from "./services/cache.service";
 import { FeedService } from "./services/feed.service";
+import { authInterceptor } from "./interceptors/auth.interceptor";
+import { ConfirmationService } from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -43,13 +50,15 @@ import { FeedService } from "./services/feed.service";
     MultiSelectModule,
     RouterOutlet,
     TableModule,
+    DialogModule,
   ],
   providers: [
     provideAnimationsAsync(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideRouter(routes, withComponentInputBinding()),
     ArticleService,
     AuthorService,
+    AuthService,
     CacheService,
     ConfirmationService,
     FeedService,

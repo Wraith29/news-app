@@ -32,8 +32,6 @@ func authenticationMiddleware() gin.HandlerFunc {
 			return []byte(config.Cfg.SecretKey), nil
 		})
 
-		fmt.Printf("%+v\n", claims)
-
 		if err != nil || !token.Valid {
 			fmt.Println("Invalid token")
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})

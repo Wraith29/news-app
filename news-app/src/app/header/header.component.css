@@ -7,13 +7,34 @@
   margin-bottom: 10px;
   display: flex;
 
-  .title {
+  h2 {
     margin-right: 10px;
+    cursor: pointer;
+    text-decoration: underline;
   }
 
   a,
   a:active,
   a:visited {
     color: black;
+  }
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+
+  & > input {
+    padding: 10px;
+  }
+}
+
+.btn-row {
+  display: flex;
+  justify-content: end;
+
+  .login-btn {
+    margin-left: 10px;
   }
 }
