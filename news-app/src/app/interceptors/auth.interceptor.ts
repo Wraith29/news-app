@@ -1,7 +1,12 @@
-import { HttpEvent, HttpHandlerFn, HttpRequest } from "@angular/common/http";
+import {
+  HttpEvent,
+  HttpEventType,
+  HttpHandlerFn,
+  HttpRequest,
+} from "@angular/common/http";
 import { inject } from "@angular/core";
 import { AuthService } from "../services/auth.service";
-import { Observable, switchMap } from "rxjs";
+import { Observable, switchMap, tap } from "rxjs";
 
 export function authInterceptor(
   req: HttpRequest<unknown>,
@@ -22,7 +27,18 @@ export function authInterceptor(
         },
       });
 
-      return next(updatedRequest);
+      return next(updatedRequest).pipe(
+        tap((event: HttpEvent<unknown>) => {
+          if (event.type === HttpEventType.Response) {
+            console.log(req);
+
+            const newToken = req.headers.get("Authorization");
+            if (newToken !== null) {
+              authService.updateToken(newToken);
+            }
+          }
+        }),
+      );
     }),
   );
 }

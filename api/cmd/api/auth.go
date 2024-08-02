@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -11,48 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
-
-func authenticationMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		authToken := c.GetHeader("Authorization")
-
-		if authToken == "" {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Missing Authorization Header"})
-			return
-		}
-
-		claims := jwt.RegisteredClaims{}
-
-		token, err := jwt.ParseWithClaims(authToken, &claims, func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				println("Method is not HMAC")
-				return nil, fmt.Errorf("Invalid signing method %s. Expected %s", token.Method.Alg(), jwt.SigningMethodHS256.Name)
-			}
-
-			return []byte(config.Cfg.SecretKey), nil
-		})
-
-		if err != nil || !token.Valid {
-			fmt.Println("Invalid token")
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-			return
-		}
-
-		expiry, err := claims.GetExpirationTime()
-
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-			return
-		}
-
-		if expiry.Before(time.Now()) {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token is expired"})
-			return
-		}
-
-		c.Next()
-	}
-}
 
 func authUser(c *gin.Context) {
 	incoming := models.User{}
@@ -81,9 +38,24 @@ func authUser(c *gin.Context) {
 		return
 	}
 
+	token, err := createAuthToken(user.Username)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"authToken": token})
+	return
+
+}
+
+func createAuthToken(username string) (string, error) {
 	now := time.Now()
 
 	claims := jwt.RegisteredClaims{
+		Issuer:    "news-feed-app",
+		Subject:   username,
 		ExpiresAt: jwt.NewNumericDate(now.Add(24 * time.Hour)),
 		IssuedAt:  jwt.NewNumericDate(now),
 		Audience:  jwt.ClaimStrings{"http://localhost:2912"},
@@ -94,13 +66,10 @@ func authUser(c *gin.Context) {
 	tokenStr, err := token.SignedString([]byte(config.Cfg.SecretKey))
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return "", err
 	}
 
-	c.JSON(http.StatusOK, gin.H{"authToken": tokenStr})
-	return
-
+	return tokenStr, nil
 }
 
 func createUser(c *gin.Context) {

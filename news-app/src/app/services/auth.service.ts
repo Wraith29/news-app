@@ -33,6 +33,10 @@ export class AuthService {
       });
   }
 
+  public updateToken(newToken: string): void {
+    localStorage.setItem("authToken", newToken);
+  }
+
   public logout(): void {
     localStorage.removeItem("username");
     localStorage.removeItem("authToken");

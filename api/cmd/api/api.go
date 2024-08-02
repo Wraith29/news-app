@@ -19,7 +19,7 @@ func AddApiRoutes(e *gin.Engine) {
 
 	authenticatedRoutes := e.Group("/")
 
-	authenticatedRoutes.Use(authenticationMiddleware())
+	authenticatedRoutes.Use(authMiddleware())
 
 	authenticatedRoutes.POST("/user", createUser)
 	authenticatedRoutes.GET("/feeds", getAllFeeds)
