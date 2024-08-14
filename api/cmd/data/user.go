@@ -12,7 +12,7 @@ func GetUserByName(name string) (*models.User, error) {
 		return nil, err
 	}
 
-	result := db.QueryRow("SELECT \"username\", \"password\" FROM \"user\" WHERE \"username\" = $1", name)
+	result := db.QueryRow("SELECT username, password FROM \"user\" WHERE username = $1", name)
 
 	var username, password string
 

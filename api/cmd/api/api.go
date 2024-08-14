@@ -15,13 +15,13 @@ type cacheableRequest[T any] struct {
 }
 
 func AddApiRoutes(e *gin.Engine) {
-	e.POST("/login", authUser)
+	e.POST("/login", login)
+	e.POST("/register", register)
 
 	authenticatedRoutes := e.Group("/")
 
 	authenticatedRoutes.Use(authMiddleware())
 
-	authenticatedRoutes.POST("/user", createUser)
 	authenticatedRoutes.GET("/feeds", getAllFeeds)
 	authenticatedRoutes.PUT("/feed", updateFeed)
 	authenticatedRoutes.DELETE("/feed", deleteFeed)
