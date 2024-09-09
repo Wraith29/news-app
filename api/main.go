@@ -20,7 +20,7 @@ func main() {
 
 	corsCfg := cors.DefaultConfig()
 	corsCfg.AllowAllOrigins = true
-	corsCfg.AllowHeaders = []string{"Authorization"}
+	corsCfg.AllowHeaders = []string{"Authorization", "Content-Type"}
 
 	r.Use(cors.New(corsCfg))
 

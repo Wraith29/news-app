@@ -1,9 +1,12 @@
 <div class="header-row">
-  @if (loggedIn) {
-  <h2>{{ username }}</h2>
+  @if (!loggedIn) {
+  <h2>
+    <a routerLink="/login">Login</a>
+  </h2>
   } @else {
-  <h2 (click)="openDialog()">Login</h2>
-  }
+  <h2>
+    <a routerLink="/profile">Profile</a>
+  </h2>
 
   <h2 class="title">
     <a routerLink="/">News </a>
@@ -12,25 +15,5 @@
   <h2>
     <a routerLink="/admin">Admin</a>
   </h2>
+  }
 </div>
-
-<p-dialog header="Login" modal="true" [(visible)]="loginDialogVisible">
-  <div class="form-row">
-    <label for="username">Username</label>
-    <input type="text" id="username" [(ngModel)]="username" />
-  </div>
-
-  <div class="form-row">
-    <label for="password">Password</label>
-    <input type="password" id="password" [(ngModel)]="password" />
-  </div>
-
-  <div class="btn-row">
-    <p-button
-      class="cancel-btn"
-      label="Cancel"
-      styleClass="p-button-danger"
-      (click)="cancelDialog()" />
-    <p-button class="login-btn" label="Login" (click)="login()" />
-  </div>
-</p-dialog>

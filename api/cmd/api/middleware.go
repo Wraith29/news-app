@@ -43,10 +43,7 @@ func authMiddleware() gin.HandlerFunc {
 
 		c.Header("Authorization", newToken)
 
-		println(newToken)
-
 		c.Next()
-
 	}
 }
 

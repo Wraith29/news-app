@@ -1,8 +1,10 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { Observable, Subscriber } from "rxjs";
 import { AuthResponse } from "../types/authresponse";
+import { AUTHTOKEN_KEY, USERNAME_KEY } from "../types/storage";
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: "root",
@@ -14,36 +16,42 @@ export class AuthService {
     this._baseUrl = environment.apiBaseUrl;
   }
 
-  public login(username: string, password: string): void {
+  public login(username: string, password: string): Observable<AuthResponse> {
     const url = this._baseUrl + "login";
 
-    this._http
-      .post<AuthResponse>(url, {
-        username: username,
-        password: password,
-      })
-      .subscribe({
-        next: (res: AuthResponse) => {
-          localStorage.setItem("authToken", res.authToken);
-          localStorage.setItem("loggedInAs", username);
-        },
-        error: (err: Error) => {
-          console.error(err);
-        },
-      });
+    return this._http.post<AuthResponse>(url, {
+      username: username,
+      password: password,
+    });
   }
 
   public updateToken(newToken: string): void {
-    localStorage.setItem("authToken", newToken);
+    localStorage.setItem(AUTHTOKEN_KEY, newToken);
   }
 
   public logout(): void {
-    localStorage.removeItem("username");
-    localStorage.removeItem("authToken");
+    localStorage.removeItem(AUTHTOKEN_KEY);
+    localStorage.removeItem(USERNAME_KEY);
+  }
+
+  public isLoggedIn(): boolean {
+    const authToken = localStorage.getItem(AUTHTOKEN_KEY);
+
+    if (authToken === null) return false;
+
+    const decodedToken = jwtDecode(authToken);
+
+    if (!decodedToken.exp) return false;
+
+    const now = Math.floor(Date.now() / 1000);
+
+    if (now > decodedToken.exp!) return false;
+
+    return true;
   }
 
   public loggedInAs(): string | null {
-    return localStorage.getItem("loggedInAs");
+    return localStorage.getItem(USERNAME_KEY);
   }
 
   /**

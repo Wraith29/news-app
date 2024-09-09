@@ -4,6 +4,8 @@ import { Subscription } from "rxjs";
 import { MultiSelectChangeEvent } from "primeng/multiselect";
 import { ArticleService } from "../services/article.service";
 import { AuthorService } from "../services/author.service";
+import { AuthService } from "../services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-home",
@@ -23,9 +25,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private _articleService: ArticleService,
     private _authorService: AuthorService,
+    private _authService: AuthService,
+    private _router: Router,
   ) {}
 
   public ngOnInit(): void {
+    if (!this._authService.isLoggedIn()) {
+      // Make sure the localStorage is cleaned out before continuing
+      this._authService.logout();
+      this._router.navigate(["login"]);
+    }
+
     this._subscriptions.push(
       this._articleService.getAll().subscribe({
         next: (articles: Article[]) => {
