@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func authUser(c *gin.Context) {
+func login(c *gin.Context) {
 	incoming := models.User{}
 
 	err := c.ShouldBindJSON(&incoming)
@@ -23,7 +24,7 @@ func authUser(c *gin.Context) {
 
 	user, err := data.GetUserByName(incoming.Username)
 
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -50,6 +51,26 @@ func authUser(c *gin.Context) {
 
 }
 
+func register(c *gin.Context) {
+	incoming := models.User{}
+
+	err := c.ShouldBindJSON(&incoming)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := data.CreateUser(incoming.Username, incoming.Password)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, id)
+}
+
 func createAuthToken(username string) (string, error) {
 	now := time.Now()
 
@@ -70,24 +91,4 @@ func createAuthToken(username string) (string, error) {
 	}
 
 	return tokenStr, nil
-}
-
-func createUser(c *gin.Context) {
-	incoming := models.User{}
-
-	err := c.ShouldBindJSON(&incoming)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	id, err := data.CreateUser(incoming.Username, incoming.Password)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, id)
 }

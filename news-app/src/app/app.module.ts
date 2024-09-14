@@ -31,14 +31,19 @@ import { CacheService } from "./services/cache.service";
 import { FeedService } from "./services/feed.service";
 import { authInterceptor } from "./interceptors/auth.interceptor";
 import { ConfirmationService } from "primeng/api";
+import { ProfileComponent } from "./profile/profile.component";
+import { AuthComponent } from "./auth/auth.component";
+import { TabViewModule } from "primeng/tabview";
 
 @NgModule({
   declarations: [
     AdminComponent,
     AppComponent,
+    AuthComponent,
     ArticleComponent,
     HeaderComponent,
     HomeComponent,
+    ProfileComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -51,6 +56,7 @@ import { ConfirmationService } from "primeng/api";
     RouterOutlet,
     TableModule,
     DialogModule,
+    TabViewModule,
   ],
   providers: [
     provideAnimationsAsync(),
