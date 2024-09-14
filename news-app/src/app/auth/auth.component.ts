@@ -42,9 +42,9 @@ export class AuthComponent implements OnInit {
         localStorage.setItem(AUTHTOKEN_KEY, res.authToken);
         localStorage.setItem(USERNAME_KEY, this.username);
 
-        console.log("Navigating to home");
-
         this._router.navigate([""]);
+
+        this._authService.loggedIn.emit(true);
       },
       error: (err: HttpErrorResponse) => {
         this.error = err.error.error;

@@ -18,4 +18,10 @@ export class ProfileComponent implements OnInit {
       this._router.navigate(["login"]);
     }
   }
+
+  public logout(): void {
+    this._authService.logout();
+
+    this._router.navigate(["login"]);
+  }
 }

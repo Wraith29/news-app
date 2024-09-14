@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { Observable, Subscriber } from "rxjs";
 import { AuthResponse } from "../types/authresponse";
@@ -12,8 +12,12 @@ import { jwtDecode } from "jwt-decode";
 export class AuthService {
   private _baseUrl: string;
 
+  public loggedIn = new EventEmitter<boolean>();
+
   constructor(private _http: HttpClient) {
     this._baseUrl = environment.apiBaseUrl;
+
+    this.loggedIn.emit(this.isLoggedIn());
   }
 
   public login(username: string, password: string): Observable<AuthResponse> {
@@ -32,6 +36,8 @@ export class AuthService {
   public logout(): void {
     localStorage.removeItem(AUTHTOKEN_KEY);
     localStorage.removeItem(USERNAME_KEY);
+
+    this.loggedIn.emit(false);
   }
 
   public isLoggedIn(): boolean {
@@ -48,10 +54,6 @@ export class AuthService {
     if (now > decodedToken.exp!) return false;
 
     return true;
-  }
-
-  public loggedInAs(): string | null {
-    return localStorage.getItem(USERNAME_KEY);
   }
 
   /**

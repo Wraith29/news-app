@@ -1,15 +1,21 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { AuthService } from "../services/auth.service";
 
 @Component({
   selector: "app-header",
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.css",
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   public loggedIn: boolean = false;
 
-  public username: string = "";
-  public password: string = "";
+  constructor(private _authService: AuthService) {}
 
-  constructor() {}
+  ngOnInit(): void {
+    this._authService.loggedIn.subscribe({
+      next: (isLoggedIn: boolean) => {
+        this.loggedIn = isLoggedIn;
+      },
+    });
+  }
 }
