@@ -10,6 +10,7 @@ import (
 	"github.com/Wraith29/news-app/api/cmd/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func login(c *gin.Context) {
@@ -34,7 +35,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	if user.Password != incoming.Password {
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(incoming.Password)) != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Username or Password"})
 		return
 	}
@@ -47,8 +48,6 @@ func login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"authToken": token})
-	return
-
 }
 
 func register(c *gin.Context) {
@@ -61,14 +60,28 @@ func register(c *gin.Context) {
 		return
 	}
 
-	id, err := data.CreateUser(incoming.Username, incoming.Password)
+	hashedPassword, err := hashPassword(incoming.Password)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, id)
+	err = data.CreateUser(incoming.Username, hashedPassword)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	authToken, err := createAuthToken(incoming.Username)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"authToken": authToken})
 }
 
 func createAuthToken(username string) (string, error) {
@@ -91,4 +104,10 @@ func createAuthToken(username string) (string, error) {
 	}
 
 	return tokenStr, nil
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 16)
+
+	return string(bytes), err
 }

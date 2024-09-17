@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { Observable, Subscriber } from "rxjs";
@@ -22,6 +22,18 @@ export class AuthService {
 
   public login(username: string, password: string): Observable<AuthResponse> {
     const url = this._baseUrl + "login";
+
+    return this._http.post<AuthResponse>(url, {
+      username: username,
+      password: password,
+    });
+  }
+
+  public register(
+    username: string,
+    password: string,
+  ): Observable<AuthResponse> {
+    const url = this._baseUrl + "register";
 
     return this._http.post<AuthResponse>(url, {
       username: username,

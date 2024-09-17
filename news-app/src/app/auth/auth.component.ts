@@ -39,16 +39,31 @@ export class AuthComponent implements OnInit {
   public login(): void {
     this._authService.login(this.username, this.password).subscribe({
       next: (res: AuthResponse) => {
-        localStorage.setItem(AUTHTOKEN_KEY, res.authToken);
-        localStorage.setItem(USERNAME_KEY, this.username);
-
-        this._router.navigate([""]);
-
-        this._authService.loggedIn.emit(true);
+        this._updateStorage(res.authToken);
       },
       error: (err: HttpErrorResponse) => {
         this.error = err.error.error;
       },
     });
+  }
+
+  public register(): void {
+    this._authService.register(this.username, this.password).subscribe({
+      next: (res: AuthResponse) => {
+        this._updateStorage(res.authToken);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error = err.error.error;
+      },
+    });
+  }
+
+  private _updateStorage(token: string): void {
+    localStorage.setItem(AUTHTOKEN_KEY, token);
+    localStorage.setItem(USERNAME_KEY, this.username);
+
+    this._router.navigate([""]);
+
+    this._authService.loggedIn.emit(true);
   }
 }

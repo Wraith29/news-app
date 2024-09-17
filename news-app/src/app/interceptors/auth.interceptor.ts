@@ -15,7 +15,7 @@ export function authInterceptor(
   const authService = inject(AuthService);
 
   // Don't add auth header to auth request
-  if (req.url.endsWith("login")) {
+  if (req.url.endsWith("login") || req.url.endsWith("register")) {
     return next(req);
   }
 

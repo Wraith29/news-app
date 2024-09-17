@@ -1,6 +1,8 @@
 package data
 
 import (
+	"database/sql"
+
 	"github.com/Wraith29/news-app/api/cmd/config"
 	"github.com/Wraith29/news-app/api/cmd/models"
 )
@@ -28,22 +30,20 @@ func GetUserByName(name string) (*models.User, error) {
 	}, nil
 }
 
-func CreateUser(username, password string) (int, error) {
+func CreateUser(username, password string) error {
 	db, err := getConn(config.Cfg)
 
 	if err != nil {
-		return -1, err
+		return err
 	}
 
-	result := db.QueryRow("INSERT INTO \"user\" (username, password) VALUES ($1, $2) RETURNING id", username, password)
+	result := db.QueryRow("INSERT INTO \"user\" (username, password) VALUES ($1, $2)", username, password)
 
-	var id int
+	err = result.Scan()
 
-	err = result.Scan(&id)
-
-	if err != nil {
-		return -1, err
+	if err != nil && err != sql.ErrNoRows {
+		return err
 	}
 
-	return id, nil
+	return nil
 }
