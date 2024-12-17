@@ -3,8 +3,8 @@ package data
 import (
 	"database/sql"
 	"fmt"
-	"news-api/internal"
 	"news-api/internal/config"
+	"news-api/internal/logging"
 
 	_ "github.com/lib/pq"
 )
@@ -12,7 +12,7 @@ import (
 var _db *sql.DB = nil
 
 func GetDb() (*sql.DB, error) {
-	logger := internal.GetLogger()
+	logger := logging.GetLogger()
 
 	if _db != nil {
 		return _db, nil
@@ -27,7 +27,7 @@ func GetDb() (*sql.DB, error) {
 	conn, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
-		logger.Println(err)
+		logger.Err(err.Error())
 		_db = nil
 		return nil, err
 	}

@@ -3,8 +3,8 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
-	"news-api/internal"
 	"news-api/internal/data"
+	"news-api/internal/logging"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,13 +15,13 @@ type authBody struct {
 }
 
 func Login(w http.ResponseWriter, req *http.Request) {
-	logger := internal.GetLogger()
+	logger := logging.GetLogger()
 
 	var body authBody
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return
@@ -32,7 +32,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return
@@ -41,7 +41,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	if user == nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		if _, err := w.Write([]byte("Invalid username or password")); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return
@@ -50,7 +50,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password)) != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		if _, err := w.Write([]byte("Invalid username or password")); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return
@@ -60,57 +60,51 @@ func Login(w http.ResponseWriter, req *http.Request) {
 }
 
 func Register(w http.ResponseWriter, req *http.Request) {
-	logger := internal.GetLogger()
+	logger := logging.GetLogger()
 
 	var body authBody
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		// Return not strictly necessary here, but if we move away from fatal logs
 		return
 	}
 
-	logger.Println("Querying Database")
 	user, err := data.GetUserByUsername(body.Username)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return
 	} else if user != nil {
 		w.WriteHeader(http.StatusConflict)
 		if _, err := w.Write([]byte("User already exists")); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return
 	}
-	logger.Println("UserData Retrieved")
-
-	logger.Println("Hashing Password")
 	hashedPassword, err := hash(body.Password)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return
 	}
-	logger.Println("Password Hashed")
 
-	logger.Println("Inserting User")
 	if err = data.InsertUser(body.Username, hashedPassword); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Fatalln(err)
+			_ = logger.Err(err.Error())
 		}
 
 		return

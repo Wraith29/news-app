@@ -1,15 +1,16 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
-	"news-api/internal"
+	"news-api/internal/logging"
 )
 
 func LoggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
-	logger := internal.GetLogger()
+	logger := logging.GetLogger()
 
 	return func(w http.ResponseWriter, req *http.Request) {
-		logger.Printf("%s %s\n", req.URL.Path, req.Method)
+		_ = logger.Info(fmt.Sprintf("%s %s", req.URL.Path, req.Method))
 
 		next.ServeHTTP(w, req)
 	}

@@ -13,9 +13,14 @@ type postgres struct {
 	Port     int    `toml:"port"`
 }
 
+type logging struct {
+	Level string `toml:"level"`
+}
+
 type Config struct {
 	SecretKey string   `toml:"secret-key"`
 	Postgres  postgres `toml:"postgres"`
+	Logging   logging  `toml:"logging"`
 }
 
 var Cfg *Config = &Config{}
