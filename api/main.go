@@ -2,10 +2,10 @@ package main
 
 import (
 	"net/http"
+	"news-api/cmd/api"
 	"news-api/internal/config"
 	"news-api/internal/logging"
 	"news-api/internal/middleware"
-	"news-api/internal/routes"
 )
 
 type router struct {
@@ -38,9 +38,10 @@ func main() {
 	logger := logging.GetLogger()
 
 	router := newRouter()
-	router.addRoute("POST /auth/login", routes.Login)
-	router.addRoute("POST /auth/register", routes.Register)
-	router.addAuthenticatedRoute("GET /feeds", routes.GetFeeds)
+	router.addRoute("POST /auth/login", api.Login)
+	router.addRoute("POST /auth/register", api.Register)
+	router.addAuthenticatedRoute("POST /feed", api.AddFeed)
+	router.addAuthenticatedRoute("GET /feed", api.GetUserFeeds)
 
 	logger.Info("Starting server on port 8080")
 

@@ -11,7 +11,7 @@ import (
 
 var _db *sql.DB = nil
 
-func GetDb() (*sql.DB, error) {
+func getDb() (*sql.DB, error) {
 	logger := logging.GetLogger()
 
 	if _db != nil {

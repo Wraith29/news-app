@@ -9,7 +9,7 @@ type User struct {
 }
 
 func GetUserByUsername(username string) (*User, error) {
-	conn, err := GetDb()
+	conn, err := getDb()
 
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func GetUserByUsername(username string) (*User, error) {
 }
 
 func InsertUser(username, password string) (int, error) {
-	conn, err := GetDb()
+	conn, err := getDb()
 
 	if err != nil {
 		return -1, err
