@@ -21,7 +21,7 @@ func GetUserByUsername(username string) (*User, error) {
 
 	user := User{}
 
-	err = result.Scan(&user)
+	err = result.Scan(&user.Id, &user.Username, &user.Password)
 
 	if err != nil && err == sql.ErrNoRows {
 		return nil, nil

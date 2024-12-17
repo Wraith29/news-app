@@ -57,9 +57,6 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
-	if _, err := w.Write([]byte("Success")); err != nil {
-		logger.Fatalln(err)
-	}
 }
 
 func Register(w http.ResponseWriter, req *http.Request) {
@@ -76,6 +73,7 @@ func Register(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	logger.Println("Querying Database")
 	user, err := data.GetUserByUsername(body.Username)
 
 	if err != nil {
@@ -93,8 +91,11 @@ func Register(w http.ResponseWriter, req *http.Request) {
 
 		return
 	}
+	logger.Println("UserData Retrieved")
 
+	logger.Println("Hashing Password")
 	hashedPassword, err := hash(body.Password)
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
@@ -103,7 +104,9 @@ func Register(w http.ResponseWriter, req *http.Request) {
 
 		return
 	}
+	logger.Println("Password Hashed")
 
+	logger.Println("Inserting User")
 	if err = data.InsertUser(body.Username, hashedPassword); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
@@ -117,7 +120,7 @@ func Register(w http.ResponseWriter, req *http.Request) {
 }
 
 func hash(pw string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(pw), 16)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(pw), 2)
 
 	return string(bytes), err
 }

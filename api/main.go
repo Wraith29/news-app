@@ -21,7 +21,18 @@ func main() {
 		"/auth/login",
 		middleware.LoggingMiddleware(
 			middleware.MethodMiddleware(
-				"POST", http.HandlerFunc(routes.Login),
+				"POST",
+				http.HandlerFunc(routes.Login),
+			),
+		),
+	)
+
+	mux.HandleFunc(
+		"/auth/register",
+		middleware.LoggingMiddleware(
+			middleware.MethodMiddleware(
+				"POST",
+				http.HandlerFunc(routes.Register),
 			),
 		),
 	)
