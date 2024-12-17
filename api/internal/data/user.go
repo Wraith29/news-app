@@ -32,16 +32,22 @@ func GetUserByUsername(username string) (*User, error) {
 	return &user, nil
 }
 
-func InsertUser(username, password string) error {
+func InsertUser(username, password string) (int, error) {
 	conn, err := GetDb()
 
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	query := `INSERT INTO "user" ("username", "password") VALUES ($1, $2)`
 
-	_, err = conn.Exec(query, username, password)
+	result, err := conn.Exec(query, username, password)
 
-	return err
+	if err != nil {
+		return -1, err
+	}
+
+	id, err := result.LastInsertId()
+
+	return int(id), err
 }

@@ -10,7 +10,7 @@ func LoggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	logger := logging.GetLogger()
 
 	return func(w http.ResponseWriter, req *http.Request) {
-		_ = logger.Info(fmt.Sprintf("%s %s", req.URL.Path, req.Method))
+		logger.Info(fmt.Sprintf("%s %s", req.URL.Path, req.Method))
 
 		next.ServeHTTP(w, req)
 	}

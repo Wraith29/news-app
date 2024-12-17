@@ -62,29 +62,31 @@ func GetLogger() *logger {
 
 const timestampFmt = "2006/01/02 15:04:05"
 
-func (l *logger) log(lvl level, msg string) error {
+func (l *logger) log(lvl level, msg string) {
 	now := time.Now()
 
 	log := fmt.Sprintf("%s %s %s\n", lvl.String(), now.Format(timestampFmt), msg)
 
 	_, err := l.output.Write([]byte(log))
 
-	return err
+	if err != nil {
+		panic(err)
+	}
 }
 
-func (l *logger) Info(msg string) error {
+func (l *logger) Info(msg string) {
 	// level > info means do not include
 	if l.lvl > info {
-		return nil
+		return
 	}
 
-	return l.log(info, msg)
+	l.log(info, msg)
 }
 
-func (l *logger) Err(msg string) error {
+func (l *logger) Err(msg string) {
 	if l.lvl > err {
-		return nil
+		return
 	}
 
-	return l.log(err, msg)
+	l.log(err, msg)
 }

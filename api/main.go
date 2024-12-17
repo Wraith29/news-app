@@ -16,19 +16,17 @@ func newRouter() router {
 	return router{*http.NewServeMux()}
 }
 
-func (r *router) addRoute(path, method string, handler http.HandlerFunc) {
+func (r *router) addRoute(path string, handler http.HandlerFunc) {
 	r.mux.HandleFunc(
 		path,
 		middleware.LoggingMiddleware(
-			middleware.MethodMiddleware(
-				method, handler,
-			),
+			handler,
 		),
 	)
 }
 
-func (r *router) addAuthenticatedRoute(path, method string, handler http.HandlerFunc) {
-	r.addRoute(path, method, middleware.AuthMiddleware(handler))
+func (r *router) addAuthenticatedRoute(path string, handler http.HandlerFunc) {
+	r.addRoute(path, middleware.AuthMiddleware(handler))
 }
 
 func main() {
@@ -40,13 +38,14 @@ func main() {
 	logger := logging.GetLogger()
 
 	router := newRouter()
-	router.addRoute("/auth/login", "POST", routes.Login)
-	router.addRoute("/auth/register", "POST", routes.Register)
+	router.addRoute("POST /auth/login", routes.Login)
+	router.addRoute("POST /auth/register", routes.Register)
+	router.addAuthenticatedRoute("GET /feeds", routes.GetFeeds)
 
-	_ = logger.Info("Starting server on port 8080")
+	logger.Info("Starting server on port 8080")
 
 	if err := http.ListenAndServe(":8080", &router.mux); err != nil {
-		_ = logger.Err(err.Error())
+		logger.Err(err.Error())
 		return
 	}
 }
