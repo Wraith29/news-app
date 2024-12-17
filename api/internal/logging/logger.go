@@ -47,7 +47,7 @@ func newLogger(writer io.Writer, lvl level) *logger {
 	}
 }
 
-var _inst *logger
+var _inst *logger = nil
 
 func GetLogger() *logger {
 	if _inst != nil {
@@ -55,7 +55,6 @@ func GetLogger() *logger {
 	}
 
 	lvl := levelFromString(config.Cfg.Logging.Level)
-
 	_inst = newLogger(os.Stdout, lvl)
 
 	return _inst
