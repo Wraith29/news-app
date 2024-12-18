@@ -153,6 +153,7 @@ func GetTagsForFeed(w http.ResponseWriter, req *http.Request) {
 
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+
 		if _, err := w.Write([]byte(err.Error())); err != nil {
 			logger.Err(err.Error())
 		}

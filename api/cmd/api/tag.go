@@ -92,3 +92,38 @@ func TagFeed(w http.ResponseWriter, req *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func UnTagFeed(w http.ResponseWriter, req *http.Request) {
+	logger := logging.GetLogger()
+
+	var body struct {
+		FeedId int `json:"feedId"`
+		TagId  int `json:"tagId"`
+	}
+
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if _, err := w.Write([]byte(err.Error())); err != nil {
+			logger.Err(err.Error())
+		}
+
+		return
+	}
+
+	success, err := data.UnTagFeed(body.FeedId, body.TagId)
+	if err != nil {
+		data.HandleDataError(w, req, err)
+		return
+	}
+
+	if !success {
+		w.WriteHeader(http.StatusBadRequest)
+		if _, err := w.Write([]byte("failed to untag feed")); err != nil {
+			logger.Err(err.Error())
+		}
+
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}

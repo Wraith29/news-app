@@ -54,3 +54,25 @@ func TagFeed(feedId, tagId, userId int) (bool, error) {
 
 	return rowsAffected == 1, err
 }
+
+func UnTagFeed(feedId, tagId int) (bool, error) {
+	conn, err := getDb()
+	if err != nil {
+		return false, err
+	}
+
+	query := `
+		DELETE FROM "feed_tag" FT
+		WHERE FT."feed_id" = $1 AND FT."tag_id" = $2
+	`
+
+	result, err := conn.Exec(query, feedId, tagId)
+
+	if err != nil {
+		return false, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	return rowsAffected == 1, err
+}
