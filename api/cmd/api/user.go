@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"news-api/internal/config"
 	"news-api/internal/data"
@@ -14,7 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type authRequest struct {
+type authPayload struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
@@ -26,8 +25,8 @@ type authResponse struct {
 func Login(w http.ResponseWriter, req *http.Request) {
 	logger := logging.GetLogger()
 
-	var body authRequest
-	logger.Info("Decoding Body into AuthRequest")
+	var body authPayload
+
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
@@ -37,7 +36,6 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Info(fmt.Sprintf("Loading user info for %s", body.Username))
 	user, err := data.GetUserByUsername(body.Username)
 
 	if err != nil {
@@ -58,7 +56,6 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Info("Comparing passwords")
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password)) != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		if _, err := w.Write([]byte("Invalid username or password")); err != nil {
@@ -68,7 +65,6 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Info("Generating Auth token")
 	token, err := getAuthToken(user.Id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -81,7 +77,6 @@ func Login(w http.ResponseWriter, req *http.Request) {
 
 	authRes := authResponse{token}
 
-	logger.Info("Marshaling token into response")
 	response, err := json.Marshal(authRes)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -101,19 +96,16 @@ func Login(w http.ResponseWriter, req *http.Request) {
 func Register(w http.ResponseWriter, req *http.Request) {
 	logger := logging.GetLogger()
 
-	var body authRequest
-	logger.Info("Decoding Body into AuthRequest")
+	var body authPayload
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(err.Error())); err != nil {
 			logger.Err(err.Error())
 		}
 
-		// Return not strictly necessary here, but if we move away from fatal logs
 		return
 	}
 
-	logger.Info(fmt.Sprintf("Finding any existing users with username %s", body.Username))
 	user, err := data.GetUserByUsername(body.Username)
 
 	if err != nil {
@@ -132,7 +124,6 @@ func Register(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Info("Hashing password")
 	hashedPassword, err := hash(body.Password)
 
 	if err != nil {
@@ -144,7 +135,6 @@ func Register(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Info("Inserting user into Database")
 	userId, err := data.InsertUser(body.Username, hashedPassword)
 
 	if err != nil {
@@ -156,7 +146,6 @@ func Register(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Info("Creating an auth token")
 	token, err := getAuthToken(userId)
 
 	if err != nil {
@@ -170,7 +159,6 @@ func Register(w http.ResponseWriter, req *http.Request) {
 
 	authRes := authResponse{token}
 
-	logger.Info("Marshaling token into response")
 	response, err := json.Marshal(authRes)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
