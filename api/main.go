@@ -42,6 +42,10 @@ func main() {
 	router.addRoute("POST /auth/register", api.Register)
 	router.addAuthenticatedRoute("POST /feed", api.AddFeed)
 	router.addAuthenticatedRoute("GET /feed", api.GetUserFeeds)
+	router.addAuthenticatedRoute("PUT /feed/join", api.JoinFeed)
+	router.addAuthenticatedRoute("PUT /feed/leave", api.LeaveFeed)
+	router.addAuthenticatedRoute("POST /tag", api.AddTag)
+	router.addAuthenticatedRoute("DELETE /tag", api.DeleteTag)
 
 	logger.Info("Starting server on port 8080")
 

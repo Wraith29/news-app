@@ -56,3 +56,47 @@ func GetUserFeeds(userId int) ([]*Feed, error) {
 
 	return result, nil
 }
+
+func JoinFeed(feedId, userId int) (bool, error) {
+	conn, err := getDb()
+	if err != nil {
+		return false, err
+	}
+
+	query := `
+		INSERT INTO "user_feed" ("user_id", "feed_id")
+		VALUES ($1, $2)
+	`
+
+	result, err := conn.Exec(query, userId, feedId)
+
+	if err != nil {
+		return false, err
+	}
+
+	rowCount, err := result.RowsAffected()
+
+	// If rowCount == 1 then the user has joined the feed, otherwise there's a problem
+	return rowCount == 1, err
+}
+
+func LeaveFeed(feedId, userId int) (bool, error) {
+	conn, err := getDb()
+	if err != nil {
+		return false, err
+	}
+
+	query := `
+		DELETE FROM "user_feed"
+		WHERE "user_id" = $1 AND "feed_id" = $2
+	`
+
+	result, err := conn.Exec(query, userId, feedId)
+
+	if err != nil {
+		return false, err
+	}
+
+	rowCount, err := result.RowsAffected()
+	return rowCount == 1, err
+}
