@@ -50,11 +50,7 @@ func GetUserFeeds(userId int) ([]*Feed, error) {
 		result = append(result, &feed)
 	}
 
-	if err := feeds.Err(); err != nil {
-		return nil, err
-	}
-
-	return result, nil
+	return result, feeds.Err()
 }
 
 func JoinFeed(feedId, userId int) (bool, error) {
@@ -99,4 +95,37 @@ func LeaveFeed(feedId, userId int) (bool, error) {
 
 	rowCount, err := result.RowsAffected()
 	return rowCount == 1, err
+}
+
+func GetTagsForFeed(feedId int) ([]Tag, error) {
+	conn, err := getDb()
+	if err != nil {
+		return nil, err
+	}
+
+	query := `
+		SELECT T."id", T."name"
+		FROM "tag" T
+		INNER JOIN "feed_tag" FT
+			ON FT."feed_id" = $1
+	`
+
+	results, err := conn.Query(query, feedId)
+	if err != nil {
+		return nil, err
+	}
+
+	tags := make([]Tag, 0)
+
+	for results.Next() {
+		var tag Tag
+
+		if err := results.Scan(&tag.Id, &tag.Name); err != nil {
+			return nil, err
+		}
+
+		tags = append(tags, tag)
+	}
+
+	return tags, results.Err()
 }

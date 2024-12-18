@@ -46,6 +46,8 @@ func main() {
 	router.addAuthenticatedRoute("PUT /feed/leave", api.LeaveFeed)
 	router.addAuthenticatedRoute("POST /tag", api.AddTag)
 	router.addAuthenticatedRoute("DELETE /tag", api.DeleteTag)
+	router.addAuthenticatedRoute("GET /feed/tag", api.GetTagsForFeed)
+	router.addAuthenticatedRoute("PUT /feed/tag", api.TagFeed)
 
 	logger.Info("Starting server on port 8080")
 

@@ -33,3 +33,24 @@ func DeleteTag(tagId int) error {
 
 	return err
 }
+
+func TagFeed(feedId, tagId, userId int) (bool, error) {
+	conn, err := getDb()
+	if err != nil {
+		return false, err
+	}
+
+	query := `
+		INSERT INTO "feed_tag" ("feed_id", "tag_id", "tagged_by")
+		VALUES ($1, $2, $3)
+	`
+
+	result, err := conn.Exec(query, feedId, tagId, userId)
+	if err != nil {
+		return false, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	return rowsAffected == 1, err
+}
