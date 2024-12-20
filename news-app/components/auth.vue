@@ -4,7 +4,7 @@ import { ref } from "vue";
 
 enum Tab {
   login,
-  register
+  register,
 }
 
 const selected = ref(Tab.login);
@@ -39,7 +39,7 @@ async function submit(): Promise<void> {
     password: password.value,
   };
 
-  const url = selected.value === Tab.login ? "/api/login" : "/api/register"
+  const url = selected.value === Tab.login ? "/api/login" : "/api/register";
 
   await $fetch(url, {
     method: "POST",
@@ -57,19 +57,28 @@ async function submit(): Promise<void> {
       localStorage.setItem("authToken", result.authToken);
       authStore.authToken = result.authToken;
       authStore.loggedIn = true;
-    }
-  })
-
+    },
+  });
 }
 </script>
 
 <template>
   <div class="auth-popup">
     <div class="tabs">
-      <div id="login-tab" class="tab" :class="{ selected: selected === Tab.login }" @click="select(Tab.login)">
+      <div
+        id="login-tab"
+        class="tab"
+        :class="{ selected: selected === Tab.login }"
+        @click="select(Tab.login)"
+      >
         <p>Login</p>
       </div>
-      <div id="register-tab" class="tab" :class="{ selected: selected === Tab.register }" @click="select(Tab.register)">
+      <div
+        id="register-tab"
+        class="tab"
+        :class="{ selected: selected === Tab.register }"
+        @click="select(Tab.register)"
+      >
         <p>Register</p>
       </div>
     </div>
@@ -77,12 +86,22 @@ async function submit(): Promise<void> {
     <div class="body">
       <div id="username-input">
         <label for="username">Username</label>
-        <input :class="{ error: isError }" v-model="username" type="text" placeholder="Username" />
+        <input
+          :class="{ error: isError }"
+          v-model="username"
+          type="text"
+          placeholder="Username"
+        />
       </div>
 
       <div id="password-input">
         <label for="password">Password</label>
-        <input :class="{ error: isError }" v-model="password" type="password" placeholder="Password" />
+        <input
+          :class="{ error: isError }"
+          v-model="password"
+          type="password"
+          placeholder="Password"
+        />
       </div>
 
       <p class="error-msg" v-show="isError">{{ errorMessage }}</p>
@@ -106,7 +125,7 @@ async function submit(): Promise<void> {
   width: 40%;
   height: 50%;
 
-  >.tabs {
+  > .tabs {
     width: calc(100% - 1px);
     height: 10%;
     border: 1px solid red;
@@ -114,14 +133,14 @@ async function submit(): Promise<void> {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 
-    >.tab {
+    > .tab {
       padding: 0;
       margin: 0;
       width: 100%;
       text-align: center;
       background-color: beige;
 
-      >p {
+      > p {
         width: 100%;
         height: 100%;
         display: flex;
@@ -148,23 +167,23 @@ async function submit(): Promise<void> {
     }
   }
 
-  >.body {
+  > .body {
     display: flex;
     flex-direction: column;
     height: calc(90% - 40px);
     padding: 20px;
 
-    >div {
+    > div {
       margin: 50px 0;
       display: flex;
       align-items: center;
       flex-direction: column;
 
-      >label {
+      > label {
         display: none;
       }
 
-      >input {
+      > input {
         height: 20px;
         font-size: large;
         width: 80%;
@@ -179,7 +198,7 @@ async function submit(): Promise<void> {
         }
       }
 
-      >button {
+      > button {
         position: absolute;
         height: 40px;
         width: 80%;
@@ -195,7 +214,7 @@ async function submit(): Promise<void> {
       }
     }
 
-    >p.error-msg {
+    > p.error-msg {
       color: red;
       text-align: center;
     }

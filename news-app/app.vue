@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import Auth from '~/components/auth'
-import { authStore } from '~/types/auth'
+import Auth from "~/components/auth";
+import { authStore } from "~/types/auth";
 import { jwtDecode } from "jwt-decode";
 
 onMounted(() => {
@@ -15,18 +15,14 @@ onMounted(() => {
 
 function isLoggedIn(): boolean {
   const token = localStorage.getItem("authToken");
-  if (token === null)
-    return false;
-
+  if (token === null) return false;
 
   const decodedToken = jwtDecode(token);
-  if (!decodedToken.exp)
-    return false;
+  if (!decodedToken.exp) return false;
 
   const now = Math.floor(Date.now() / 1000);
 
-  if (now > decodedToken.exp)
-    return false;
+  if (now > decodedToken.exp) return false;
 
   return true;
 }
@@ -35,8 +31,6 @@ function isLoggedIn(): boolean {
 <template>
   <main>
     <Auth v-show="!authStore.loggedIn" />
-    <p>{{ authStore }}</p>
-
-    <button @click="console.log(authStore)">Log</button>
+    <NuxtPage />
   </main>
 </template>
