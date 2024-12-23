@@ -1,33 +1,35 @@
 <script setup lang="ts">
-import { authStore } from "@/types/auth";
-
-const { data, status, error } = await useFetch("/api/articles", {
+const articles = await $fetch("/api/articles", {
   method: "GET",
-  responseType: "json",
-  headers: {
-    Authorization: authStore.authToken,
-  },
+  credentials: "include",
 });
 </script>
 
 <template>
+  <div id="background">
+  
   <div id="content">
-    <p v-if="status === 'pending'">Pending</p>
-    <ul v-else-if="status === 'success'">
-      <li v-for="article in data">
-        {{ article }}
+    <ul>
+      <li v-for="article in articles">
+        {{ article.title }}
       </li>
     </ul>
-    <p v-else>
-      {{ error }}
-    </p>
+  </div>
   </div>
 </template>
 
 <style scoped>
-div#content {
+div#background {
   width: 100%;
   height: 100%;
   display: flex;
+}
+
+div#content {
+  margin: 8px;
+  width: calc(100vw - 16px);
+  height: calc(100vh - 16px);
+  display: flex;
+  background-color: white;
 }
 </style>

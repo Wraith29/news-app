@@ -19,8 +19,10 @@ func newRouter() router {
 func (r *router) addRoute(path string, handler http.HandlerFunc) {
 	r.mux.HandleFunc(
 		path,
-		middleware.LoggingMiddleware(
-			handler,
+		middleware.CorsMiddleware(
+			middleware.LoggingMiddleware(
+				handler,
+			),
 		),
 	)
 }

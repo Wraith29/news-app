@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { AuthResponse, AuthRequest, logIn, logOut } from "@/types/auth";
+import { AuthRequest } from "@/types/auth";
 
 const username = ref("");
 const password = ref("");
@@ -18,18 +18,15 @@ async function submit(path: string): Promise<void> {
     method: "POST",
     body: JSON.stringify(request),
     responseType: "json",
+    credentials: "include",
     async onResponse({ response }) {
-      console.log("Received Response: ", response);
-
       switch (response.status) {
         case 401:
         case 500:
           error.value = response._data.data;
-          logOut();
           return;
         case 200:
-          error.value = response._data.authToken;
-          logIn(response._data.authToken);
+          error.value = "";
           navigateTo("/");
           return;
       }

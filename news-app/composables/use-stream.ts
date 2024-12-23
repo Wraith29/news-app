@@ -9,8 +9,6 @@ export async function useStream<T>(body: ReadableStream): Promise<T> {
     messageBody += value;
   }
 
-  console.log("Message Body: ", messageBody);
-
   const result = JSON.parse(messageBody);
 
   return result as T;

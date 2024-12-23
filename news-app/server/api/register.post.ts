@@ -9,5 +9,6 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
   return await $fetch(url, {
     method: "POST",
     body: JSON.stringify(request),
+    credentials: "include",
   });
 });

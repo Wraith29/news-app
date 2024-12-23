@@ -18,10 +18,6 @@ type authPayload struct {
 	Password string `json:"password"`
 }
 
-type authResponse struct {
-	AuthToken string `json:"authToken"`
-}
-
 func Login(w http.ResponseWriter, req *http.Request) {
 	logger := logging.GetLogger()
 
@@ -75,22 +71,8 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	authRes := authResponse{token}
-
-	response, err := json.Marshal(authRes)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Err(err.Error())
-		}
-
-		return
-	}
-
+	http.SetCookie(w, &token)
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write(response); err != nil {
-		logger.Err(err.Error())
-	}
 }
 
 func Register(w http.ResponseWriter, req *http.Request) {
@@ -157,22 +139,8 @@ func Register(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	authRes := authResponse{token}
-
-	response, err := json.Marshal(authRes)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(err.Error())); err != nil {
-			logger.Err(err.Error())
-		}
-
-		return
-	}
-
+	http.SetCookie(w, &token)
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write(response); err != nil {
-		logger.Err(err.Error())
-	}
 }
 
 func hash(pw string) (string, error) {
@@ -181,18 +149,28 @@ func hash(pw string) (string, error) {
 	return string(bytes), err
 }
 
-func getAuthToken(userId int) (string, error) {
+func getAuthToken(userId int) (http.Cookie, error) {
 	now := time.Now()
+
+	expiry := now.Add(24 * time.Hour)
 
 	claims := jwt.RegisteredClaims{
 		Issuer:    "news-feed-api",
 		Subject:   strconv.Itoa(userId),
-		ExpiresAt: jwt.NewNumericDate(now.Add(24 * time.Hour)),
+		ExpiresAt: jwt.NewNumericDate(expiry),
 		IssuedAt:  jwt.NewNumericDate(now),
 		Audience:  jwt.ClaimStrings{"http://localhost:2912"},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString([]byte(config.Cfg.SecretKey))
+	signedToken, err := token.SignedString([]byte(config.Cfg.SecretKey))
+
+	return http.Cookie{
+		Name:     "authToken",
+		Value:    signedToken,
+		Expires:  expiry,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   false,
+	}, err
 }

@@ -4,23 +4,14 @@ export default defineEventHandler(async (event): Promise<Article[]> => {
   const config = useRuntimeConfig(event);
   const url = `${config.apiBaseUrl}/articles`;
 
-  console.log(getQuery(event));
-
-  const authToken = getRequestHeader(event, "Authorization");
-
-  if (!authToken) {
-    console.error("Missing Authorization Header");
-    throw createError({
-      statusCode: 401,
-      message: 'Missing required header "Authorization"',
-    });
-  }
+  const headers = event.node.req.headers;
 
   return await $fetch<Article[]>(url, {
     method: "GET",
     responseType: "json",
+    credentials: "include",
     headers: {
-      Authorization: authToken,
+      Cookie: headers.cookie || "",
     },
   });
 });

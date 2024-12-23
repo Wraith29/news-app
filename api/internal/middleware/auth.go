@@ -22,18 +22,25 @@ var (
 func AuthMiddleware(next http.Handler) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		logger := logging.GetLogger()
-		authHeader := req.Header.Get("Authorization")
 
-		if authHeader == "" {
+		fmt.Printf("%+v\n", req.Cookies())
+
+		authCookie, err := req.Cookie("authToken")
+
+		fmt.Printf("%+v\n", err)
+
+		if err != nil || authCookie == nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			if _, err := w.Write([]byte("Missing required header \"Authorization\"")); err != nil {
+			if _, err := w.Write([]byte(err.Error())); err != nil {
 				logger.Err(err.Error())
 			}
 
 			return
 		}
 
-		token, err := getAuthToken(authHeader)
+		fmt.Printf("Auth Token: %s\n", authCookie.Value)
+
+		token, err := getAuthToken(authCookie.Value)
 		if err != nil && err == expiredToken || err == invalidToken {
 			w.WriteHeader(http.StatusUnauthorized)
 			if _, err := w.Write([]byte(err.Error())); err != nil {
