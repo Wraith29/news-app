@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { authStore } from "@/types/auth";
 
-console.log(authStore);
-
 const { data, status, error } = await useFetch("/api/articles", {
   method: "GET",
   responseType: "json",
@@ -10,8 +8,6 @@ const { data, status, error } = await useFetch("/api/articles", {
     Authorization: authStore.authToken,
   },
 });
-
-console.log(data);
 </script>
 
 <template>
