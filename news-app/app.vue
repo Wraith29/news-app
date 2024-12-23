@@ -1,36 +1,55 @@
 <script setup lang="ts">
+import { authStore, logOut, logIn } from "@/types/auth";
 import { onMounted } from "vue";
-import Auth from "~/components/auth";
-import { authStore } from "~/types/auth";
 import { jwtDecode } from "jwt-decode";
 
+function gotoAuth(): void {
+  logOut();
+  navigateTo("/auth");
+}
+
 onMounted(() => {
-  if (isLoggedIn()) {
-    authStore.loggedIn = true;
-    authStore.authToken = localStorage.getItem("authToken");
-  } else {
-    localStorage.removeItem("authToken");
+  const storedToken = localStorage.getItem("authToken");
+
+  if (!storedToken) {
+    gotoAuth();
+    return;
   }
-});
 
-function isLoggedIn(): boolean {
-  const token = localStorage.getItem("authToken");
-  if (token === null) return false;
+  let decodedToken: JwtPayload;
 
-  const decodedToken = jwtDecode(token);
-  if (!decodedToken.exp) return false;
+  try {
+   decodedToken = jwtDecode(storedToken);
+  } catch {
+    gotoAuth();
+    return;
+  }
+  if (!decodedToken || !decodedToken.exp) {
+    gotoAuth();
+    return;
+  }
 
   const now = Math.floor(Date.now() / 1000);
 
-  if (now > decodedToken.exp) return false;
+  if (now > decodedToken.exp) {
+    gotoAuth();
+    return;
+  }
 
-  return true;
-}
+  logIn(storedToken);
+});
 </script>
 
 <template>
   <main>
-    <Auth v-show="!authStore.loggedIn" />
     <NuxtPage />
   </main>
 </template>
+
+<style scoped>
+main {
+  width: 100%;
+  height: 100%;
+  background-color: purple;
+}
+</style>

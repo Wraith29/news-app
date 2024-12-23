@@ -17,22 +17,6 @@ function select(t: Tab): void {
   selected.value = t;
 }
 
-async function readStream<T>(body: ReadableStream): Promise<T> {
-  const reader = body.pipeThrough(new TextDecoderStream()).getReader();
-
-  let messageBody = "";
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    messageBody += value;
-  }
-
-  const result = JSON.parse(messageBody);
-
-  return result as T;
-}
-
 async function submit(): Promise<void> {
   const request = <AuthRequest>{
     username: username.value,
@@ -46,13 +30,17 @@ async function submit(): Promise<void> {
     body: JSON.stringify(request),
     responseType: "stream",
     async onResponseError({ response: { body } }) {
-      const result = await readStream<{ data: string }>(body);
+      const result = await useStream<{ data: string }>(body);
 
       isError.value = true;
       errorMessage.value = result.data;
+
+      authStore.loggedIn = false;
+      authStore.authToken = "";
+      localStorage.removeItem("authToken");
     },
     async onResponse({ response: { body } }) {
-      const result = await readStream<AuthResponse>(body);
+      const result = await useStream<AuthResponse>(body);
 
       localStorage.setItem("authToken", result.authToken);
       authStore.authToken = result.authToken;
