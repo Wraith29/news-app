@@ -2,6 +2,7 @@
 const articles = await $fetch("/api/articles", {
   method: "GET",
   credentials: "include",
+  headers: useRequestHeaders(["cookie"]),
 });
 </script>
 

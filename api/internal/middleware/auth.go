@@ -23,12 +23,7 @@ func AuthMiddleware(next http.Handler) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		logger := logging.GetLogger()
 
-		fmt.Printf("%+v\n", req.Cookies())
-
 		authCookie, err := req.Cookie("authToken")
-
-		fmt.Printf("%+v\n", err)
-
 		if err != nil || authCookie == nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			if _, err := w.Write([]byte(err.Error())); err != nil {
@@ -37,8 +32,6 @@ func AuthMiddleware(next http.Handler) http.HandlerFunc {
 
 			return
 		}
-
-		fmt.Printf("Auth Token: %s\n", authCookie.Value)
 
 		token, err := getAuthToken(authCookie.Value)
 		if err != nil && err == expiredToken || err == invalidToken {

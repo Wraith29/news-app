@@ -20,6 +20,7 @@ async function submit(path: string): Promise<void> {
     responseType: "json",
     credentials: "include",
     async onResponse({ response }) {
+    console.log(response);
       switch (response.status) {
         case 401:
         case 500:

@@ -15,7 +15,9 @@ export default defineEventHandler(async (event) => {
     responseType: "json",
     credentials: "include",
     async onResponse({ response }) {
-      event.node.res.setHeader("Set-Cookie", response.headers.getSetCookie());
+      console.log("Login Response: ", response.headers);
+      // event.node.res.setHeader("Set-Cookie", response.headers.getSetCookie());
+      setResponseHeader(event, "Set-Cookie", response.headers.getSetCookie());
     },
   });
 

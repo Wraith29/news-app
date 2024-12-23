@@ -159,7 +159,7 @@ func getAuthToken(userId int) (http.Cookie, error) {
 		Subject:   strconv.Itoa(userId),
 		ExpiresAt: jwt.NewNumericDate(expiry),
 		IssuedAt:  jwt.NewNumericDate(now),
-		Audience:  jwt.ClaimStrings{"http://localhost:2912"},
+		Audience:  jwt.ClaimStrings{"http://localhost:3000"},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -172,5 +172,7 @@ func getAuthToken(userId int) (http.Cookie, error) {
 		Expires:  expiry,
 		SameSite: http.SameSiteLaxMode,
 		Secure:   false,
+		Path:     "/",
+		HttpOnly: true,
 	}, err
 }
