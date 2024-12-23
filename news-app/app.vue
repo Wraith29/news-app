@@ -19,7 +19,7 @@ onMounted(() => {
   let decodedToken: JwtPayload;
 
   try {
-   decodedToken = jwtDecode(storedToken);
+    decodedToken = jwtDecode(storedToken);
   } catch {
     gotoAuth();
     return;

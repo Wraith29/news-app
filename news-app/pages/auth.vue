@@ -12,7 +12,7 @@ async function submit(path: string): Promise<void> {
     password: password.value,
   };
 
-  const url = `/api/${path}`
+  const url = `/api/${path}`;
 
   await $fetch(url, {
     method: "POST",
@@ -33,7 +33,7 @@ async function submit(path: string): Promise<void> {
           navigateTo("/");
           return;
       }
-    }
+    },
   });
 }
 </script>
@@ -46,23 +46,43 @@ async function submit(path: string): Promise<void> {
       <div class="box inputs">
         <div class="form-input">
           <label for="username">Username</label>
-          <input :class="{ error: error.length !== 0 }" name="username" placeholder="Username" type="text"
-            v-model="username" />
+          <input
+            :class="{ error: error.length !== 0 }"
+            name="username"
+            placeholder="Username"
+            type="text"
+            v-model="username"
+          />
         </div>
 
         <div class="form-input">
           <label>Password</label>
-          <input :class="{ error: error.length !== 0 }" name="password" placeholder="Password" type="password"
-            v-model="password" />
+          <input
+            :class="{ error: error.length !== 0 }"
+            name="password"
+            placeholder="Password"
+            type="password"
+            v-model="password"
+          />
         </div>
       </div>
 
       <p class="error" v-if="error.length !== 0">{{ error }}</p>
 
       <div class="box buttons">
-        <input name="login" value="Login" type="button" @click="() => submit('login')" />
+        <input
+          name="login"
+          value="Login"
+          type="button"
+          @click="() => submit('login')"
+        />
 
-        <input name="register" value="Register" type="button" @click="() => submit('register')" />
+        <input
+          name="register"
+          value="Register"
+          type="button"
+          @click="() => submit('register')"
+        />
       </div>
     </div>
     <div id="page-split"></div>
@@ -86,21 +106,21 @@ div#body {
   align-items: center;
   justify-content: center;
 
-  >p#header {
+  > p#header {
     font-size: xx-large;
     font-weight: bold;
     text-decoration: underline;
   }
 
-  >div.inputs {
+  > div.inputs {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     height: 300px;
     margin-bottom: 25px;
 
-    >div.form-input {
-      >input {
+    > div.form-input {
+      > input {
         font-size: large;
         width: 100%;
         padding: 10px 0;
@@ -110,31 +130,35 @@ div#body {
         border-radius: 3px;
 
         &.error {
-          border-color:red;
+          border-color: red;
         }
       }
 
-      >label {
+      > label {
         display: none;
       }
     }
-   }
+  }
 
   p.error {
     color: red;
     font-size: large;
   }
 
-  >div.buttons {
+  > div.buttons {
     width: 30%;
     display: flex;
     flex-direction: column;
 
-    >input {
+    > input {
       width: 100%;
       font-size: large;
       padding: 10px;
-      background-image: linear-gradient(to right, mediumvioletred, mediumpurple);
+      background-image: linear-gradient(
+        to right,
+        mediumvioletred,
+        mediumpurple
+      );
       color: white;
       border: none;
       border-radius: 5px;
@@ -142,7 +166,11 @@ div#body {
       cursor: pointer;
 
       &:hover {
-        background-image: linear-gradient(to left, mediumvioletred, mediumpurple);
+        background-image: linear-gradient(
+          to left,
+          mediumvioletred,
+          mediumpurple
+        );
       }
     }
   }

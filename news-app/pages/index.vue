@@ -3,12 +3,12 @@ import { authStore } from "@/types/auth";
 
 console.log(authStore);
 
-const {data, status, error} = await useFetch("/api/articles", {
+const { data, status, error } = await useFetch("/api/articles", {
   method: "GET",
   responseType: "json",
   headers: {
     Authorization: authStore.authToken,
-  }
+  },
 });
 
 console.log(data);
@@ -16,16 +16,14 @@ console.log(data);
 
 <template>
   <div id="content">
-    <p v-if="status === 'pending'">
-      Pending
-    </p>
+    <p v-if="status === 'pending'">Pending</p>
     <ul v-else-if="status === 'success'">
       <li v-for="article in data">
-        {{article}}
+        {{ article }}
       </li>
     </ul>
     <p v-else>
-      {{error}}
+      {{ error }}
     </p>
   </div>
 </template>
