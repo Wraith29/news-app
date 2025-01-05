@@ -3,7 +3,6 @@ package middleware
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"news-api/internal/config"
 	"news-api/internal/ctx"
@@ -78,7 +77,6 @@ func AuthMiddleware(next http.Handler) http.HandlerFunc {
 
 func getAuthToken(tkn string) (*jwt.Token, error) {
 	logger := logging.GetLogger()
-	logger.Info(fmt.Sprintf("Received token %s", tkn))
 
 	claims := jwt.RegisteredClaims{}
 

@@ -35,7 +35,7 @@ func GetArticles(w http.ResponseWriter, req *http.Request) {
 	}
 
 	slices.SortFunc(articles, func(l, r *data.Article) int {
-		return l.PublishedParsed.UTC().Compare(r.PublishedParsed.UTC())
+		return r.PublishedParsed.UTC().Compare(l.PublishedParsed.UTC())
 	})
 
 	response, err := json.Marshal(articles)

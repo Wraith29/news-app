@@ -1,6 +1,7 @@
 package data
 
 import (
+	"strings"
 	"time"
 
 	"github.com/mmcdole/gofeed"
@@ -28,7 +29,7 @@ func GetArticlesFromFeeds(feeds []*Feed) ([]*Article, error) {
 
 		for _, article := range data.Items {
 			articles = append(articles, &Article{
-				Title:           article.Title,
+				Title:           stripNewlines(article.Title),
 				Description:     article.Description,
 				Link:            article.Link,
 				PublishedParsed: article.PublishedParsed,
@@ -38,4 +39,17 @@ func GetArticlesFromFeeds(feeds []*Feed) ([]*Article, error) {
 	}
 
 	return articles, nil
+}
+
+func stripNewlines(s string) string {
+	var left, right string
+	found := true
+
+	for found {
+		left, right, found = strings.Cut(s, "\r\n")
+
+		s = left + right
+	}
+
+	return s
 }
