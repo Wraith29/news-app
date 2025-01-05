@@ -20,11 +20,12 @@ async function submit(path: string): Promise<void> {
     responseType: "json",
     credentials: "include",
     async onResponse({ response }) {
-    console.log(response);
       switch (response.status) {
         case 401:
-        case 500:
           error.value = response._data.data;
+          return;
+        case 500:
+          error.value = "Internal Server Error: Please try again later";
           return;
         case 200:
           error.value = "";

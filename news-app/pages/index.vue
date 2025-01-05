@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Article from "@/components/article";
+
 const articles = await $fetch("/api/articles", {
   method: "GET",
   credentials: "include",
@@ -8,14 +10,21 @@ const articles = await $fetch("/api/articles", {
 
 <template>
   <div id="background">
-  
-  <div id="content">
-    <ul>
-      <li v-for="article in articles">
-        {{ article.title }}
-      </li>
-    </ul>
-  </div>
+    <div id="content">
+      <div id="page-title">
+        <p id="title">News</p>
+      </div>
+
+      <div id="filters">
+        <NuxtLink to="/my-feeds">My Feeds</NuxtLink>
+      </div>
+
+      <ul>
+        <li v-for="article in articles">
+          <Article :article="article" />
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -31,6 +40,34 @@ div#content {
   width: calc(100vw - 16px);
   height: calc(100vh - 16px);
   display: flex;
+  flex-direction: column;
   background-color: white;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  > div#page-title {
+    padding: 0;
+    margin: 0;
+
+    > p#title {
+      font-size: xx-large;
+      text-decoration: underline;
+      font-weight: bold;
+      padding-left: 25px;
+    }
+  }
+
+  > div#filters {
+    padding-left: 25px;
+  }
+
+  > ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    overflow: scroll;
+  }
 }
 </style>
