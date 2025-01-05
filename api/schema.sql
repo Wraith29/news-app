@@ -27,7 +27,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.feed_tag (
     feed_id integer NOT NULL,
-    tag_id integer NOT NULL
+    tag_id integer NOT NULL,
+    tagged_by integer NOT NULL
 );
 
 
@@ -106,7 +107,8 @@ ALTER TABLE public."user" OWNER TO iacnaylor;
 
 CREATE TABLE public.user_feed (
     user_id integer NOT NULL,
-    feed_id integer NOT NULL
+    feed_id integer NOT NULL,
+    enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -212,6 +214,14 @@ ALTER TABLE ONLY public.feed_tag
 
 ALTER TABLE ONLY public.feed_tag
     ADD CONSTRAINT "FK_TagId_Tag" FOREIGN KEY (tag_id) REFERENCES public.tag(id) ON DELETE CASCADE;
+
+
+--
+-- Name: feed_tag FK_TaggedBy_User; Type: FK CONSTRAINT; Schema: public; Owner: iacnaylor
+--
+
+ALTER TABLE ONLY public.feed_tag
+    ADD CONSTRAINT "FK_TaggedBy_User" FOREIGN KEY (tagged_by) REFERENCES public."user"(id) ON DELETE CASCADE NOT VALID;
 
 
 --
