@@ -20,20 +20,15 @@ func AddFeed(author, url string, addedBy int) error {
 	return err
 }
 
-func GetUserFeeds(userId int) ([]*Feed, error) {
+func GetAllFeeds() ([]*Feed, error) {
 	conn, err := getDb()
 	if err != nil {
 		return nil, err
 	}
 
-	query := `
-		SELECT NF."id", "feed_author", "feed_url", "added_by"
-		FROM "news_feed" NF
-		INNER JOIN "user_feed" UF ON NF."id" = UF."feed_id"
-		WHERE UF."user_id" = $1
-	`
+	query := `SELECT NF."id", NF."feed_author", NF."feed_url", NF."added_by" FROM "news_feed" NF`
 
-	feeds, err := conn.Query(query, userId)
+	feeds, err := conn.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -51,6 +46,68 @@ func GetUserFeeds(userId int) ([]*Feed, error) {
 	}
 
 	return result, feeds.Err()
+}
+
+type UserFeed struct {
+	Feed
+	Enabled     bool `json:"enabled"`
+	Subscribers int  `json:"subscribers"`
+}
+
+func GetUserFeeds(userId int) ([]*UserFeed, error) {
+	conn, err := getDb()
+	if err != nil {
+		return nil, err
+	}
+
+	query := `
+		SELECT NF."id", NF."feed_author", NF."feed_url", NF."added_by", UF."enabled"
+		FROM "news_feed" NF
+		INNER JOIN "user_feed" UF ON NF."id" = UF."feed_id"
+		WHERE UF."user_id" = $1
+	`
+
+	feeds, err := conn.Query(query, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]*UserFeed, 0)
+
+	for feeds.Next() {
+		feed := UserFeed{}
+
+		if err := feeds.Scan(&feed.Id, &feed.FeedAuthor, &feed.FeedUrl, &feed.AddedBy, &feed.Enabled); err != nil {
+			return nil, err
+		}
+
+		result = append(result, &feed)
+	}
+
+	return result, feeds.Err()
+}
+
+func ToggleFeed(feedId, userId int) (bool, error) {
+	conn, err := getDb()
+	if err != nil {
+		return false, err
+	}
+
+	query := `
+		UPDATE "user_feed"
+		SET "enabled" = NOT "enabled"
+		WHERE "user_id" = $1 AND "feed_id" = $2
+	`
+
+	result, err := conn.Exec(query, userId, feedId)
+
+	if err != nil {
+		return false, err
+	}
+
+	rowCount, err := result.RowsAffected()
+
+	return rowCount == 1, err
 }
 
 func JoinFeed(feedId, userId int) (bool, error) {

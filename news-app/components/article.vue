@@ -28,7 +28,7 @@ function formatDate(date: string): string {
       "
     >
       <p class="title">{{ article.title }}</p>
-      <p id="date">{{ formatDate(article.publishedParsed) }}</p>
+      <p class="date">{{ formatDate(article.publishedParsed) }}</p>
     </div>
 
     <div
@@ -72,7 +72,7 @@ div.article {
       text-decoration: underline;
     }
 
-    > p#date {
+    > p.date {
       padding: 0;
       margin: 0;
     }

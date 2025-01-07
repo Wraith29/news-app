@@ -1,21 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { Feed } from "@/types/feed";
 
 type FeedProps = {
   feed: Feed;
 };
 
-const { feed } = defineProps<FeedProps>();
-
-const expanded = ref(false);
+const { feed } = defineProps<Feed>();
 </script>
 
 <template>
-  <div v-if="expanded">
-    
-  </div>
-  <div v-else>
-
+  <div class="content">
   </div>
 </template>
+
+<style scoped>
+</style>

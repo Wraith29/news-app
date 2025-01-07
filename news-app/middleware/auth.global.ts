@@ -10,10 +10,11 @@ function isValidAuthToken(token: string): boolean {
   return now < decoded.exp;
 }
 
-export default defineNuxtRouteMiddleware((to, _) => {
+export default defineNuxtRouteMiddleware((to, from) => {
   const loggedIn = useState("loggedIn");
-  if (loggedIn.value)
-    return;
+  if (loggedIn.value) return;
+
+  if (from.path === "/auth") return;
 
   const authCookie = useCookie("authToken");
   const isValid = authCookie.value ? isValidAuthToken(authCookie.value) : false;

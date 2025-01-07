@@ -44,6 +44,8 @@ func main() {
 	router.addRoute("POST /auth/register", api.Register)
 	router.addAuthenticatedRoute("POST /feed", api.AddFeed)
 	router.addAuthenticatedRoute("GET /feed", api.GetUserFeeds)
+	router.addAuthenticatedRoute("GET /feed/all", api.GetAllFeeds)
+	router.addAuthenticatedRoute("PUT /feed", api.ToggleFeed)
 	router.addAuthenticatedRoute("PUT /feed/join", api.JoinFeed)
 	router.addAuthenticatedRoute("PUT /feed/leave", api.LeaveFeed)
 	router.addAuthenticatedRoute("POST /tag", api.AddTag)

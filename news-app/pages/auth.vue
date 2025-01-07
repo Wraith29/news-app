@@ -38,9 +38,9 @@ async function submit(path: string): Promise<void> {
 </script>
 
 <template>
-  <div id="wrapper">
-    <div id="body">
-      <p id="header">Login or Register</p>
+  <div class="wrapper">
+    <div class="body">
+      <p class="header">Login or Register</p>
 
       <div class="box inputs">
         <div class="form-input">
@@ -84,18 +84,18 @@ async function submit(path: string): Promise<void> {
         />
       </div>
     </div>
-    <div id="page-split"></div>
+    <div class="page-split"></div>
   </div>
 </template>
 
 <style scoped>
-div#wrapper {
+div.wrapper {
   width: 100%;
   height: 100%;
   display: flex;
 }
 
-div#body {
+div.body {
   background-color: white;
   margin: 8px 0 8px 8px;
   height: calc(100vh - 16px);
@@ -105,7 +105,7 @@ div#body {
   align-items: center;
   justify-content: center;
 
-  > p#header {
+  > p.header {
     font-size: xx-large;
     font-weight: bold;
     text-decoration: underline;
@@ -139,7 +139,7 @@ div#body {
     }
   }
 
-  p.error {
+  > p.error {
     color: red;
     font-size: large;
   }
@@ -175,7 +175,7 @@ div#body {
   }
 }
 
-div#page-split {
+div.page-split {
   background-color: purple;
   height: 100vh;
   width: 50%;

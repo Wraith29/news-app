@@ -1,12 +1,12 @@
-import type { UserFeed } from "@/types/user-feed";
+import type { Feed } from "@/types/feed";
 
-export default defineEventHandler(async (event): Promise<UserFeed[]> => {
+export default defineEventHandler(async (event): Promise<Feed[]> => {
   const config = useRuntimeConfig(event);
-  const url = `${config.apiBaseUrl}/feed`;
+  const url = `${config.apiBaseUrl}/feed/all`;
 
   const headers = event.node.req.headers;
 
-  return await $fetch<UserFeed[]>(url, {
+  return await $fetch<Feed[]>(url, {
     method: "GET",
     responseType: "json",
     credentials: "include",

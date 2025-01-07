@@ -39,6 +39,35 @@ func AddFeed(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+func GetAllFeeds(w http.ResponseWriter, req *http.Request) {
+	logger := logging.GetLogger()
+
+	feeds, err := data.GetAllFeeds()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(err.Error())); err != nil {
+			logger.Err(err.Error())
+		}
+
+		return
+	}
+
+	msg, err := json.Marshal(&feeds)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(err.Error())); err != nil {
+			logger.Err(err.Error())
+		}
+
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	if _, err := w.Write(msg); err != nil {
+		logger.Err(err.Error())
+	}
+}
+
 func GetUserFeeds(w http.ResponseWriter, req *http.Request) {
 	logger := logging.GetLogger()
 
@@ -68,6 +97,43 @@ func GetUserFeeds(w http.ResponseWriter, req *http.Request) {
 	if _, err := w.Write(msg); err != nil {
 		logger.Err(err.Error())
 	}
+}
+
+func ToggleFeed(w http.ResponseWriter, req *http.Request) {
+	logger := logging.GetLogger()
+
+	userId := req.Context().Value(ctx.ContextKeyUserId).(int)
+
+	var body struct {
+		FeedId int `json:"feedId"`
+	}
+
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if _, err := w.Write([]byte(err.Error())); err != nil {
+			logger.Err(err.Error())
+		}
+
+		return
+	}
+
+	success, err := data.ToggleFeed(body.FeedId, userId)
+
+	if err != nil {
+		data.HandleDataError(w, req, err)
+		return
+	}
+
+	if !success {
+		w.WriteHeader(http.StatusBadRequest)
+		if _, err := w.Write([]byte("failed to toggle news feed state")); err != nil {
+			logger.Err(err.Error())
+		}
+
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func JoinFeed(w http.ResponseWriter, req *http.Request) {

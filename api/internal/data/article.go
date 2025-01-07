@@ -15,12 +15,16 @@ type Article struct {
 	Author          string     `json:"author"`
 }
 
-func GetArticlesFromFeeds(feeds []*Feed) ([]*Article, error) {
+func GetArticlesFromFeeds(feeds []*UserFeed) ([]*Article, error) {
 	articles := make([]*Article, 0)
 
 	parser := gofeed.NewParser()
 
 	for _, feed := range feeds {
+		if !feed.Enabled {
+			continue
+		}
+
 		data, err := parser.ParseURL(feed.FeedUrl)
 
 		if err != nil {

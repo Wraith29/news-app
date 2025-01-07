@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Page } from "@/types/page";
+import Header from "@/components/header";
 import Article from "@/components/article";
 
 const articles = await $fetch("/api/articles", {
@@ -9,15 +11,9 @@ const articles = await $fetch("/api/articles", {
 </script>
 
 <template>
-  <div id="background">
-    <div id="content">
-      <div id="page-title">
-        <p id="title">News</p>
-      </div>
-
-      <div id="filters">
-        <NuxtLink to="/my-feeds">My Feeds</NuxtLink>
-      </div>
+  <div class="background">
+    <div class="content">
+      <Header :page="'home'" />
 
       <ul>
         <li v-for="article in articles">
@@ -29,13 +25,13 @@ const articles = await $fetch("/api/articles", {
 </template>
 
 <style scoped>
-div#background {
+div.background {
   width: 100%;
   height: 100%;
   display: flex;
 }
 
-div#content {
+div.home-content {
   margin: 8px;
   width: calc(100vw - 16px);
   height: calc(100vh - 16px);
@@ -47,19 +43,7 @@ div#content {
     display: none;
   }
 
-  > div#page-title {
-    padding: 0;
-    margin: 0;
-
-    > p#title {
-      font-size: xx-large;
-      text-decoration: underline;
-      font-weight: bold;
-      padding-left: 25px;
-    }
-  }
-
-  > div#filters {
+  > div.filters {
     padding-left: 25px;
   }
 
