@@ -11,7 +11,7 @@ const { page } = defineProps<HeaderProps>();
 <template>
   <div id="headers">
     <a class="header" :class="{ active: page === 'home' }" href="/"> News </a>
-    <a class="header" :class="{ active: page === 'myFeeds' }" href="/feeds">
+    <a class="header" :class="{ active: page === 'feeds' }" href="/feeds">
       Feeds
     </a>
     <a class="header" href="/logout">Logout</a>

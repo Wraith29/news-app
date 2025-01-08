@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import Feed from "@/components/feed";
-
 const feeds = await $fetch("/api/all-feeds", {
   method: "GET",
   credentials: "include",
@@ -9,9 +7,23 @@ const feeds = await $fetch("/api/all-feeds", {
 </script>
 
 <template>
-  <div class="content">
+  <div id="browse-feeds-box">
+    <p id="browse-feeds-title">Browse Feeds</p>
+    <Feed v-for="feed in feeds" :feed="feed" />
   </div>
 </template>
 
 <style scoped>
+div#browse-feeds-box {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid green;
+
+  > p#browse-feeds-title {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: x-large;
+    text-decoration: underline;
+  }
+}
 </style>

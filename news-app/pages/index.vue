@@ -31,7 +31,7 @@ div.background {
   display: flex;
 }
 
-div.home-content {
+div.content {
   margin: 8px;
   width: calc(100vw - 16px);
   height: calc(100vh - 16px);

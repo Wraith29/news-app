@@ -3,4 +3,5 @@ export type Feed = {
   feedAuthor: string;
   feedUrl: string;
   addedBy: number;
+  subscribers: number;
 };

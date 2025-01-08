@@ -1,10 +1,11 @@
 package data
 
 type Feed struct {
-	Id         int    `json:"id"`
-	FeedAuthor string `json:"feed_author"`
-	FeedUrl    string `json:"feed_url"`
-	AddedBy    int    `json:"added_by"`
+	Id          int    `json:"id"`
+	FeedAuthor  string `json:"feed_author"`
+	FeedUrl     string `json:"feed_url"`
+	AddedBy     int    `json:"added_by"`
+	Subscribers int    `json:"subscribers"`
 }
 
 func AddFeed(author, url string, addedBy int) error {
@@ -26,7 +27,14 @@ func GetAllFeeds() ([]*Feed, error) {
 		return nil, err
 	}
 
-	query := `SELECT NF."id", NF."feed_author", NF."feed_url", NF."added_by" FROM "news_feed" NF`
+	query := `
+		SELECT NF."id",
+				NF."feed_author",
+				NF."feed_url",
+				NF."added_by",
+				(SELECT CAST(COUNT(*) AS INT) AS "subscribers" FROM "user_feed" WHERE "feed_id" = NF."id")
+		FROM "news_feed" NF
+	`
 
 	feeds, err := conn.Query(query)
 	if err != nil {
@@ -38,7 +46,7 @@ func GetAllFeeds() ([]*Feed, error) {
 	for feeds.Next() {
 		feed := Feed{}
 
-		if err := feeds.Scan(&feed.Id, &feed.FeedAuthor, &feed.FeedUrl, &feed.AddedBy); err != nil {
+		if err := feeds.Scan(&feed.Id, &feed.FeedAuthor, &feed.FeedUrl, &feed.AddedBy, &feed.Subscribers); err != nil {
 			return nil, err
 		}
 
@@ -50,8 +58,7 @@ func GetAllFeeds() ([]*Feed, error) {
 
 type UserFeed struct {
 	Feed
-	Enabled     bool `json:"enabled"`
-	Subscribers int  `json:"subscribers"`
+	Enabled bool `json:"enabled"`
 }
 
 func GetUserFeeds(userId int) ([]*UserFeed, error) {
@@ -61,10 +68,13 @@ func GetUserFeeds(userId int) ([]*UserFeed, error) {
 	}
 
 	query := `
-		SELECT NF."id", NF."feed_author", NF."feed_url", NF."added_by", UF."enabled"
+		SELECT NF."id", NF."feed_author",
+				NF."feed_url", NF."added_by",
+				UF."enabled", (SELECT CAST(COUNT(*) AS INT) AS "subscribers" FROM "user_feed" WHERE "feed_id" = NF."id")
 		FROM "news_feed" NF
-		INNER JOIN "user_feed" UF ON NF."id" = UF."feed_id"
-		WHERE UF."user_id" = $1
+		INNER JOIN "user_feed" UF
+		ON NF."id" = UF."feed_id"
+		WHERE UF."user_id" = $1;
 	`
 
 	feeds, err := conn.Query(query, userId)
@@ -77,7 +87,7 @@ func GetUserFeeds(userId int) ([]*UserFeed, error) {
 	for feeds.Next() {
 		feed := UserFeed{}
 
-		if err := feeds.Scan(&feed.Id, &feed.FeedAuthor, &feed.FeedUrl, &feed.AddedBy, &feed.Enabled); err != nil {
+		if err := feeds.Scan(&feed.Id, &feed.FeedAuthor, &feed.FeedUrl, &feed.AddedBy, &feed.Enabled, &feed.Subscribers); err != nil {
 			return nil, err
 		}
 

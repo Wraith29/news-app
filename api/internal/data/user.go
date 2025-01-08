@@ -39,15 +39,15 @@ func InsertUser(username, password string) (int, error) {
 		return -1, err
 	}
 
-	query := `INSERT INTO "user" ("username", "password") VALUES ($1, $2)`
+	query := `INSERT INTO "user" ("username", "password") VALUES ($1, $2) RETURNING "id"`
 
-	result, err := conn.Exec(query, username, password)
+	result := conn.QueryRow(query, username, password)
 
-	if err != nil {
+	var id int
+
+	if err := result.Scan(&id); err != nil {
 		return -1, err
 	}
 
-	id, err := result.LastInsertId()
-
-	return int(id), err
+	return id, nil
 }
