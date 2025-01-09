@@ -2,10 +2,11 @@ package data
 
 type Feed struct {
 	Id          int    `json:"id"`
-	FeedAuthor  string `json:"feed_author"`
-	FeedUrl     string `json:"feed_url"`
-	AddedBy     int    `json:"added_by"`
+	FeedAuthor  string `json:"feedAuthor"`
+	FeedUrl     string `json:"feedUrl"`
+	AddedBy     int    `json:"addedBy"`
 	Subscribers int    `json:"subscribers"`
+	IsJoined    bool   `json:"isJoined"`
 }
 
 func AddFeed(author, url string, addedBy int) error {
@@ -21,7 +22,7 @@ func AddFeed(author, url string, addedBy int) error {
 	return err
 }
 
-func GetAllFeeds() ([]*Feed, error) {
+func GetAllFeeds(userId int) ([]*Feed, error) {
 	conn, err := getDb()
 	if err != nil {
 		return nil, err
@@ -32,11 +33,12 @@ func GetAllFeeds() ([]*Feed, error) {
 				NF."feed_author",
 				NF."feed_url",
 				NF."added_by",
-				(SELECT CAST(COUNT(*) AS INT) AS "subscribers" FROM "user_feed" WHERE "feed_id" = NF."id")
+				(SELECT CAST(COUNT(*) AS INT) AS "subscribers" FROM "user_feed" WHERE "feed_id" = NF."id"),
+				(SELECT EXISTS(SELECT 1 FROM "user_feed" WHERE "feed_id" = NF."id" AND "user_id" = $1))
 		FROM "news_feed" NF
 	`
 
-	feeds, err := conn.Query(query)
+	feeds, err := conn.Query(query, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +48,7 @@ func GetAllFeeds() ([]*Feed, error) {
 	for feeds.Next() {
 		feed := Feed{}
 
-		if err := feeds.Scan(&feed.Id, &feed.FeedAuthor, &feed.FeedUrl, &feed.AddedBy, &feed.Subscribers); err != nil {
+		if err := feeds.Scan(&feed.Id, &feed.FeedAuthor, &feed.FeedUrl, &feed.AddedBy, &feed.Subscribers, &feed.IsJoined); err != nil {
 			return nil, err
 		}
 

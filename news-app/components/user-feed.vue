@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { UserFeed } from "@/types/user-feed";
+import type { UserFeed } from "@/types/user-feed";
 
 type FeedProps = {
   feed: UserFeed;
+  refreshPage: () => Promise<void>;
 };
 
-const { feed } = defineProps<FeedProps>();
+const { feed, refreshPage } = defineProps<FeedProps>();
 
 const enabledText = ref(feed.enabled ? "Enabled" : "Disabled");
 
@@ -30,6 +31,8 @@ async function leaveFeed(): Promise<void> {
       feedId: feed.id,
     }),
   });
+
+  await refreshPage();
 }
 </script>
 
@@ -38,30 +41,18 @@ async function leaveFeed(): Promise<void> {
     <span class="user-feed-header">
       <div class="user-feed-header-left">
         <p class="user-feed-header-title">
-          {{ feed.feed_author }}
+          {{ feed.feedAuthor }}
         </p>
         <p class="user-feed-url">
-          <a href="feed.feed_url" target="_blank">{{ feed.feed_url }}</a>
+          <a :href="feed.feedUrl" target="_blank">{{ feed.feedUrl }}</a>
         </p>
       </div>
 
       <div class="user-feed-header-right">
-        <input
-          name="toggleFeed"
-          class="user-feed-enabled-toggle"
-          :class="enabledText"
-          type="button"
-          :value="enabledText"
-          @click="() => toggleFeedEnabled()"
-        />
+        <input name="toggleFeed" class="user-feed-enabled-toggle" :class="enabledText" type="button"
+          :value="enabledText" @click="() => toggleFeedEnabled()" />
 
-        <input
-          name="leaveFeed"
-          class="user-feed-leave-btn"
-          type="button"
-          value="Leave"
-          @click="() => leaveFeed()"
-        />
+        <input name="leaveFeed" class="user-feed-leave-btn" type="button" value="Leave" @click="() => leaveFeed()" />
       </div>
     </span>
   </div>
@@ -73,16 +64,16 @@ div.user-feed {
   border-radius: 15px;
   padding: 10px;
 
-  > span.user-feed-header {
+  >span.user-feed-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    > div.user-feed-header-left {
+    >div.user-feed-header-left {
       display: flex;
       flex-direction: column;
 
-      > p {
+      >p {
         margin: 0;
 
         &.user-feed-header-title {
@@ -92,13 +83,14 @@ div.user-feed {
       }
     }
 
-    > div.user-feed-header-right {
-      > input.user-feed-enabled-toggle {
+    >div.user-feed-header-right {
+      >input.user-feed-enabled-toggle {
         width: 70px;
         height: 30px;
         background: none;
         border-radius: 5px;
         margin-right: 10px;
+        cursor: pointer;
 
         &.Enabled {
           border: 1px solid darkgreen;
@@ -109,19 +101,14 @@ div.user-feed {
         }
       }
 
-      > input.user-feed-leave-btn {
+      >input.user-feed-leave-btn {
         width: 70px;
         height: 30px;
         background: none;
         border: 1px solid mediumvioletred;
         border-radius: 5px;
+        cursor: pointer;
       }
-    }
-
-    > p.user-feed-header-title {
-      font-size: large;
-      text-decoration: underline;
-      margin: 0;
     }
   }
 }

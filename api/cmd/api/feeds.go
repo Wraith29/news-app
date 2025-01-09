@@ -14,8 +14,8 @@ func AddFeed(w http.ResponseWriter, req *http.Request) {
 	userId := req.Context().Value(ctx.ContextKeyUserId).(int)
 
 	var body struct {
-		FeedAuthor string `json:"feed_author"`
-		FeedUrl    string `json:"feed_url"`
+		FeedAuthor string `json:"feedAuthor"`
+		FeedUrl    string `json:"feedUrl"`
 	}
 
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
@@ -42,7 +42,9 @@ func AddFeed(w http.ResponseWriter, req *http.Request) {
 func GetAllFeeds(w http.ResponseWriter, req *http.Request) {
 	logger := logging.GetLogger()
 
-	feeds, err := data.GetAllFeeds()
+	userId := req.Context().Value(ctx.ContextKeyUserId).(int)
+
+	feeds, err := data.GetAllFeeds(userId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(err.Error())); err != nil {

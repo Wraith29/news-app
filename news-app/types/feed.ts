@@ -4,4 +4,5 @@ export type Feed = {
   feedUrl: string;
   addedBy: number;
   subscribers: number;
+  isJoined: boolean;
 };
