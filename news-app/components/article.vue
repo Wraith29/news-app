@@ -12,7 +12,17 @@ const expanded = ref(false);
 
 function formatDate(date: string): string {
   const value = new Date(date);
-  return `${value.getFullYear()}/${value.getMonth() + 1}/${value.getDate()}`;
+  const year = value.getFullYear();
+  let month = (value.getMonth()+1).toString();
+  let day = value.getDate().toString();
+
+  if (month.length === 1)
+    month = `0${month}`;
+
+  if (day.length === 1)
+    day = `0${day}`;
+
+  return `${year}/${month}/${day}`;
 }
 </script>
 
