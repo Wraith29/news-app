@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const feeds = await $fetch("/api/all-feeds", {
+const feeds = await $fetch("/api/feed/all", {
   method: "GET",
   credentials: "include",
   headers: useRequestHeaders(["cookie"]),

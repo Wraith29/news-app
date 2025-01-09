@@ -17,7 +17,8 @@ const feeds = await $fetch("/api/my-feeds", {
 div#my-feeds-parent {
   margin: 20px;
   padding: 20px;
-  border: 1px solid blue;
+  border: 1px solid darkgreen;
+  border-radius: 25px;
 
   > p#my-feeds-title {
     margin: 0;

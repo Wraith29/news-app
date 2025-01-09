@@ -8,12 +8,7 @@ type FeedProps = {
 
 const { feed } = defineProps<FeedProps>();
 
-const expanded = ref(false);
 const enabledText = ref(feed.enabled ? "Enabled" : "Disabled");
-
-function toggleExpanded(): void {
-  expanded.value = !expanded.value;
-}
 
 async function toggleFeedEnabled(): Promise<void> {
   feed.enabled = !feed.enabled;
@@ -29,7 +24,12 @@ async function toggleFeedEnabled(): Promise<void> {
 }
 
 async function leaveFeed(): Promise<void> {
-  console.log("Leaving Feed:", feed.id);
+  await $fetch("/api/feed/leave", {
+    method: "PUT",
+    body: JSON.stringify({
+      feedId: feed.id,
+    }),
+  });
 }
 </script>
 
@@ -37,8 +37,11 @@ async function leaveFeed(): Promise<void> {
   <div class="user-feed">
     <span class="user-feed-header">
       <div class="user-feed-header-left">
-        <p class="user-feed-header-title" @click="toggleExpanded">
+        <p class="user-feed-header-title">
           {{ feed.feed_author }}
+        </p>
+        <p class="user-feed-url">
+          <a href="feed.feed_url" target="_blank">{{ feed.feed_url }}</a>
         </p>
       </div>
 
@@ -46,6 +49,7 @@ async function leaveFeed(): Promise<void> {
         <input
           name="toggleFeed"
           class="user-feed-enabled-toggle"
+          :class="enabledText"
           type="button"
           :value="enabledText"
           @click="() => toggleFeedEnabled()"
@@ -60,16 +64,12 @@ async function leaveFeed(): Promise<void> {
         />
       </div>
     </span>
-
-    <div v-if="expanded">
-      <p class="user-feed-expanded-data">{{ feed.feed_url }}</p>
-    </div>
   </div>
 </template>
 
 <style scoped>
 div.user-feed {
-  border: 1px solid red;
+  border: 1px solid mediumvioletred;
   border-radius: 15px;
   padding: 10px;
 
@@ -80,10 +80,15 @@ div.user-feed {
 
     > div.user-feed-header-left {
       display: flex;
-      align-items: center;
+      flex-direction: column;
 
-      > p.user-feed-header-title {
-        font-size: large;
+      > p {
+        margin: 0;
+
+        &.user-feed-header-title {
+          font-size: large;
+          text-decoration: underline;
+        }
       }
     }
 
@@ -92,9 +97,16 @@ div.user-feed {
         width: 70px;
         height: 30px;
         background: none;
-        border: 1px solid mediumvioletred;
         border-radius: 5px;
         margin-right: 10px;
+
+        &.Enabled {
+          border: 1px solid darkgreen;
+        }
+
+        &.Disabled {
+          border: 1px solid darkred;
+        }
       }
 
       > input.user-feed-leave-btn {
