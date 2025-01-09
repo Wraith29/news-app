@@ -21,7 +21,7 @@ const { feeds, refreshPage } = defineProps<MyFeedProps>();
 div#my-feeds-parent {
   margin: 20px;
   padding: 20px;
-  border: 1px solid darkgreen;
+  border: 3px solid darkgreen;
   border-radius: 25px;
 
   > p#my-feeds-title {

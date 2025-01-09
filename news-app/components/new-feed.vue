@@ -10,7 +10,8 @@
 div#new-feed-parent {
   margin: 20px;
   padding: 20px;
-  border: 1px solid orange;
+  border: 3px solid darkblue;
+  border-radius: 25px;
 
   > p#new-feed-title {
     margin: 0;

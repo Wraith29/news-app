@@ -20,7 +20,7 @@ const { feeds, refreshPage } = defineProps<BrowseFeedProps>();
 div#browse-feeds-box {
   margin: 20px;
   padding: 20px;
-  border: 1px solid darkred;
+  border: 3px solid darkred;
   border-radius: 25px;
 
   > p#browse-feeds-title {
