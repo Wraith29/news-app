@@ -49,10 +49,22 @@ async function leaveFeed(): Promise<void> {
       </div>
 
       <div class="user-feed-header-right">
-        <input name="toggleFeed" class="user-feed-enabled-toggle" :class="enabledText" type="button"
-          :value="enabledText" @click="() => toggleFeedEnabled()" />
+        <input
+          name="toggleFeed"
+          class="user-feed-enabled-toggle"
+          :class="enabledText"
+          type="button"
+          :value="enabledText"
+          @click="() => toggleFeedEnabled()"
+        />
 
-        <input name="leaveFeed" class="user-feed-leave-btn" type="button" value="Leave" @click="() => leaveFeed()" />
+        <input
+          name="leaveFeed"
+          class="user-feed-leave-btn"
+          type="button"
+          value="Leave"
+          @click="() => leaveFeed()"
+        />
       </div>
     </span>
   </div>
@@ -64,16 +76,16 @@ div.user-feed {
   border-radius: 15px;
   padding: 10px;
 
-  >span.user-feed-header {
+  > span.user-feed-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    >div.user-feed-header-left {
+    > div.user-feed-header-left {
       display: flex;
       flex-direction: column;
 
-      >p {
+      > p {
         margin: 0;
 
         &.user-feed-header-title {
@@ -83,8 +95,8 @@ div.user-feed {
       }
     }
 
-    >div.user-feed-header-right {
-      >input.user-feed-enabled-toggle {
+    > div.user-feed-header-right {
+      > input.user-feed-enabled-toggle {
         width: 70px;
         height: 30px;
         background: none;
@@ -101,7 +113,7 @@ div.user-feed {
         }
       }
 
-      >input.user-feed-leave-btn {
+      > input.user-feed-leave-btn {
         width: 70px;
         height: 30px;
         background: none;

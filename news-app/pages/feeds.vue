@@ -1,15 +1,21 @@
 <script setup lang="ts">
-const {data: userFeeds , refresh: refreshUserFeeds} = await useFetch("/api/my-feeds", {
-  method: "GET",
-  credentials: "include",
-  headers: useRequestHeaders(["cookie"]),
-});
+const { data: userFeeds, refresh: refreshUserFeeds } = await useFetch(
+  "/api/my-feeds",
+  {
+    method: "GET",
+    credentials: "include",
+    headers: useRequestHeaders(["cookie"]),
+  },
+);
 
-const {data: allFeeds, refresh: refreshAllFeeds} = await useFetch("/api/feed/all", {
-  method: "GET",
-  credentials: "include",
-  headers: useRequestHeaders(["cookie"]),
-});
+const { data: allFeeds, refresh: refreshAllFeeds } = await useFetch(
+  "/api/feed/all",
+  {
+    method: "GET",
+    credentials: "include",
+    headers: useRequestHeaders(["cookie"]),
+  },
+);
 
 console.log(allFeeds);
 
@@ -25,8 +31,16 @@ async function refreshPage(): Promise<void> {
       <Header :page="'feeds'" />
 
       <div id="feed-selectors">
-        <MyFeeds class="feed-selector" :feeds="userFeeds" :refreshPage="refreshPage" />
-        <BrowseFeeds class="feed-selector" :feeds="allFeeds" :refreshPage="refreshPage" />
+        <MyFeeds
+          class="feed-selector"
+          :feeds="userFeeds"
+          :refreshPage="refreshPage"
+        />
+        <BrowseFeeds
+          class="feed-selector"
+          :feeds="allFeeds"
+          :refreshPage="refreshPage"
+        />
       </div>
 
       <NewFeed id="new-feed-parent" />
@@ -50,16 +64,16 @@ div.feeds-content {
   background-color: white;
   overflow: hidden;
 
-  >div#feed-selectors {
+  > div#feed-selectors {
     display: flex;
     height: 80%;
 
-    >.feed-selector {
+    > .feed-selector {
       width: 100%;
     }
   }
 
-  >#new-feed-parent {
+  > #new-feed-parent {
     margin: 20px;
     height: 30%;
   }

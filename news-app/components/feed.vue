@@ -32,13 +32,26 @@ async function joinFeed(): Promise<void> {
         </span>
 
         <p class="feed-url">
-          <a :href=feed.feedUrl target="_blank">{{ feed.feedUrl }}</a>
+          <a :href="feed.feedUrl" target="_blank">{{ feed.feedUrl }}</a>
         </p>
       </div>
 
       <div class="feed-header-right">
-        <input name="joinFeed" class="feed-join-btn active" v-if="feed.isJoined" type="button" value="Joined" />
-        <input name="joinFeed" class="feed-join-btn" v-else type="button" value="Join" @click="() => joinFeed()" />
+        <input
+          name="joinFeed"
+          class="feed-join-btn active"
+          v-if="feed.isJoined"
+          type="button"
+          value="Joined"
+        />
+        <input
+          name="joinFeed"
+          class="feed-join-btn"
+          v-else
+          type="button"
+          value="Join"
+          @click="() => joinFeed()"
+        />
       </div>
     </span>
   </div>
@@ -54,33 +67,33 @@ div.feed {
   border-radius: 15px;
   padding: 10px;
 
-  >span.feed-header {
+  > span.feed-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    >div.feed-header-left {
+    > div.feed-header-left {
       display: flex;
       flex-direction: column;
 
-      >span.feed-header-title-wrapper {
+      > span.feed-header-title-wrapper {
         display: flex;
         align-items: center;
 
-        >p.feed-header-title {
+        > p.feed-header-title {
           font-size: large;
           text-decoration: underline;
         }
 
-        >sub.feed-sub-count {
-        padding-left: 10px;
+        > sub.feed-sub-count {
+          padding-left: 10px;
           text-decoration: none;
         }
       }
     }
 
-    >div.feed-header-right {
-      >input.feed-join-btn{
+    > div.feed-header-right {
+      > input.feed-join-btn {
         width: 70px;
         height: 30px;
         background: none;
